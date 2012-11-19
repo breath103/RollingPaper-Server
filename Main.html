@@ -14,64 +14,70 @@ html,body {
 	position: static;
 	width: 1600px;
 	height: 770px;
-	background: black;
 }
 
 .Left {
 	float: left;
-	width: 15%;
+	width : 13%;
 	height: 100%;
 	background-color: #0f4e3a;
+	box-shadow: 0 0 20px 5px #888888;
 }
 
 .Right_Center {
-	float: left;
-	width: 90%;
+	float: inherit;
+	width: 100%;
 	height: 100%;
+	background-image:
+		url("https://www.facebook.com/download/113300708833161/web_paper.png");
 }
 
 .Right {
 	float: right;
-	width: 85%;
+	width: 87%;
 	height: 100%;
-	background-color: rgba(255, 255, 0.16);
 	display: inline;
 }
 
 .Logo {
 	width: 90%;
 	height: 30%;
-	background-color: #0f4e3a;
+	background-image:
+		url("https://www.facebook.com/download/170751859737060/Rolling%20Paper%20Logo.png");
+	background-size: 160px 125px;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .place_To {
 	width: 90%;
 	height: 5%;
 	background-color: #0f4e3a;
-	color: white;
-	font-size: 150%
+	color: #ccbb86;
+	font-size: 150%;
 }
 
 .Place_Holder {
-	width: 90%;
+	width: 75%;
 	height: 18%;
-	background-color: #0f4e3a;
-	outline: OrangeRed dotted thick;
-	color: rgb(255, 130, 255);
-	font-size: 200%
+	background-color: #0c3b2d;
+	outline: #f64e02 dotted medium;
+	color: #ccbb86;
+	font-size: 200%;
+	font-weight: bold;
 }
 
 .Place_From {
 	width: 90%;
 	height: 5%;
 	background-color: #0f4e3a;
-	color: white;
-	font-size: 150%
+	color: #ccbb86;
+	font-size: 150%;
 }
 
 .Participate {
 	width: 90%;
-	height: 36%;
+	height: 35%;
 	background-color: #0f4e3a;
 	left: 5%;
 	top: 60%;
@@ -125,30 +131,28 @@ html,body {
 	height: 100%;
 }
 
-/*.Place_Holder2 {
+.Place_Holder2 {
 	width: 100%;
 	height: 93%;
-}*/
+}
 </style>
 </head>
 <body>
 	<div class="Container" style="margin: auto;">
 		<div class="Left">
-			<bsr>
-			<div class="Logo" style="margin: auto auto auto auto;">
-				<br> <img
-					src="https://www.facebook.com/download/170751859737060/Rolling%20Paper%20Logo.png"
-					width=160 height=125 />
-			</div>
+			<div class="Logo" style="margin: auto auto auto auto;"></div>
 			<div class="place_To" style="margin: 5px auto 5px auto;">
-				&nbsp;to. sarah</font>
+				<font face=arial>&nbsp;To. 'sarah'</font>
 			</div>
 			<div class="Place_Holder" style="margin: 5px auto 5px auto;">
-				<br>"Happy Birthday"</font>
+				<br>
+				<font>"Happy Birthday"</font>
 			</div>
-			<div class="Place_From" style="margin: 5px auto 5px auto;">&nbsp;from.
-				tom</div>
-			<div class="Participate" style="margin: 5px auto 5px auto;">
+			<div class="Place_From" style="margin: 5px auto 5px auto;">
+				<br>
+				<font face=arial>&nbsp;From.</font>
+			</div>
+			<div class="Participate" style="margin: 25px auto 5px auto;">
 				<ul>
 					<li>Participate1</li>
 					<li>Participate2</li>
@@ -168,18 +172,16 @@ html,body {
 					<li>Participate3</li>
 					<li>Participate3</li>
 					<li>Participate3</li>
-					
-
 				</ul>
 			</div>
 		</div>
 		<div class="Right">
-			<div class="Mo_Left">ML</div>
-			<div class="Mo_Right">MR</div>
 			<div class="Right_Center">
-				<div class="Place_Holder2">ph2</div>
+			<div class="Mo_Left"></div>
+			<div class="Mo_Right"></div>
+				<div class="Place_Holder2"></div>
 				<div class="Place_Date"></div>
-				<div class="Date">date</div>
+				<div class="Date"></div>
 			</div>
 		</div>
 	</div>
