@@ -10,6 +10,19 @@ html,body {
 	margin: 0px;
 }
 
+a:link {
+	color: #9a9e72;
+	text-decoration: none;
+} /* unvisited link */
+a:visited {
+	color: #9a9e72;
+} /* visited link */
+a:hover {
+	color: #BDB76B;
+} /* mouse over link */
+a:active {
+	color: #0f4e3a;
+} /* selected link */
 .Container {
 	position: static;
 	width: 1600px;
@@ -18,7 +31,7 @@ html,body {
 
 .Left {
 	float: left;
-	width : 13%;
+	width: 13%;
 	height: 100%;
 	background-color: #0f4e3a;
 	box-shadow: 0 0 20px 5px #888888;
@@ -66,6 +79,7 @@ html,body {
 	color: #ccbb86;
 	font-size: 150%;
 	font-weight: bold;
+	color: #ccbb86;
 }
 
 .Place_From {
@@ -84,6 +98,22 @@ html,body {
 	top: 60%;
 	overflow: scroll;
 	overflow-x: hidden;
+	color: #9a9e72;
+}
+
+.Part_Image {
+	float: left;
+	width: 22%;
+	height: 13%;
+	background-color: #1a533e;
+}
+
+.Part_Name {
+	float: right;
+	width: 70%;
+	height: 13%;
+	background-color: #0f4e3a;
+	line-height: 30px;
 }
 
 ::-webkit-scrollbar {
@@ -112,6 +142,8 @@ html,body {
 	top: 93%;
 	left: 82%;
 	float: right;
+	line-height: 200%;
+	font-weight: bold;
 }
 
 .Place_Date {
@@ -141,49 +173,58 @@ html,body {
 <body>
 	<div class="Container" style="margin: auto;">
 		<div class="Left">
-			<div class="Logo" style="margin: auto auto auto auto;">
-			</div>
+			<div class="Logo" style="margin: auto auto auto auto;"></div>
 			<hr width=75% color=#a6a577 size=1>
 			<div class="place_To" style="margin: 30px auto 10px auto;">
-				<font face=arial>&nbsp;To. 'sarah'</font>
+				<font face=arial>&nbsp;To. </font> <a
+					href="https://www.facebook.com/sue9280?fref=ts" target=_blank><font
+					face=arial>'이수영'</font></a>
 			</div>
 			<div class="Place_Holder" style="margin: 5px auto 40px auto;">
-				<br>
-				<font>"Happy Birthday"</font>
+				<br> <font>"Happy Birthday"</font>
 			</div>
 			<div class="Place_From" style="margin: 3px auto 5px auto;">
-			<font face=arial>&nbsp;From.</font>
+				<font face=arial>&nbsp;From.</font>
 			</div>
 			<div class="Participate" style="margin: 0px auto 5px auto;">
-				<ul>
-					<li>Participate1</li>
-					<li>Participate2</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-					<li>Participate3</li>
-				</ul>
+				<div class="Part_Image" id="name1"
+					style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank><img alt="name1" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
+					</div>
+				<div class="Part_Name" id="name1" style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank>이나연</a>
+				</div> <!-- Participate List 1 -->
+				<div class="Part_Image" id="name2"
+					style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank><img alt="name2" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
+					</div>
+				<div class="Part_Name" id="name2" style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank>이나연</a>
+				</div> <!-- Participate List 2 -->
+				<div class="Part_Image" id="name3"
+					style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank><img alt="name3" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
+					</div>
+				<div class="Part_Name" id="name3" style="margin: 0px auto 5px auto;">
+					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
+						target=_blank>이나연</a>
+				</div> <!-- Participate List 3 -->
 			</div>
 		</div>
 		<div class="Right">
 			<div class="Right_Center">
-			<div class="Mo_Left"></div>
-			<div class="Mo_Right"></div>
+				<div class="Mo_Left"></div>
+				<div class="Mo_Right"></div>
 				<div class="Place_Holder2"></div>
 				<div class="Place_Date"></div>
-				<div class="Date"></div>
+				<div class="Date">
+				<font color=#728560>&nbsp;2012.5.5</font>
+				</div>
 			</div>
 		</div>
 	</div>
