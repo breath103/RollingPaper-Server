@@ -37,32 +37,36 @@ a:active {
 	box-shadow: 0 0 20px 5px #888888;
 }
 
-.Right_Center {
-	float: inherit;
-	width: 100%;
-	height: 100%;
-	background-image:
-		url("https://www.facebook.com/download/113300708833161/web_paper.png");
-}
-
-.Right {
-	float: right;
-	width: 87%;
-	height: 100%;
-	display: inline;
-}
-
 .Logo {
-	width: 90%;
-	height: 25%;
+	width: 80%;
+	height: 17%;
 	background-image:
 		url("https://www.facebook.com/download/170751859737060/Rolling%20Paper%20Logo.png");
-	background-size: 160px 125px;
+	background-size: 80% 80%;
 	background-repeat: no-repeat;
 	background-position: center;
 }
 
-.place_To {
+.Logo_Name {
+	width: 90%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	text-align: center;
+	text-shadow: 1px 1px 1px #888888
+}
+
+.Logo_down_shadow {
+	width: 73%;
+	height: 3%;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;	
+}
+
+
+.Place_To {
 	width: 85%;
 	height: 3%;
 	background-color: #0f4e3a;
@@ -70,16 +74,21 @@ a:active {
 	font-size: 100%;
 }
 
+.Mark{text-size:
+}
+
 .Place_Holder {
-	width: 79%;
-	height: 18%;
+	width: 73%;
+	height: 19%;
 	background-color: #0c3b2d;
-	outline: #f64e02 dashed 2px;
-	outline-radius: 5px;
+	border: #f64e02 dashed 2px;
+	border-radius: 4px;
 	color: #ccbb86;
 	font-size: 150%;
 	font-weight: bold;
 	color: #ccbb86;
+	background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),
+		to(#0c3b2c) );
 }
 
 .Place_From {
@@ -91,11 +100,9 @@ a:active {
 }
 
 .Participate {
-	width: 80%;
-	height: 35%;
+	width: 72%;
+	height: 27%;
 	background-color: #0f4e3a;
-	left: 5%;
-	top: 60%;
 	overflow: scroll;
 	overflow-x: hidden;
 	color: #9a9e72;
@@ -103,17 +110,17 @@ a:active {
 
 .Part_Image {
 	float: left;
-	width: 22%;
-	height: 13%;
+	width: 26%;
+	height: 20%;
 	background-color: #1a533e;
 }
 
 .Part_Name {
 	float: right;
 	width: 70%;
-	height: 13%;
+	height: 20%;
 	background-color: #0f4e3a;
-	line-height: 30px;
+	line-height: 40px;
 }
 
 ::-webkit-scrollbar {
@@ -135,20 +142,39 @@ a:active {
 	background: #738762;
 }
 
+.Right {
+	float: right;
+	width: 87%;
+	height: 100%;
+	display: inline;
+}
+
+.Right_Center {
+	float: inherit;
+	width: 100%;
+	height: 100%;
+	background-image:
+		url("https://www.facebook.com/download/113300708833161/web_paper.png");
+}
+
+.Place_Holder2 {
+	width: 100%;
+	height: 90%;
+}
+
 .Date {
 	width: 13%;
-	height: 7%;
+	height: 10%;
 	background-color: #ccbb86;
-	top: 93%;
-	left: 82%;
 	float: right;
 	line-height: 200%;
 	font-weight: bold;
+	box-shadow: 3px 1px 7px #888888;
 }
 
 .Place_Date {
 	width: 5%;
-	height: 7%;
+	height: 10%;
 	float: right;
 }
 
@@ -163,70 +189,91 @@ a:active {
 	width: 5%;
 	height: 100%;
 }
-
-.Place_Holder2 {
-	width: 100%;
-	height: 93%;
-}
 </style>
 </head>
 <body>
 	<div class="Container" style="margin: auto;">
 		<div class="Left">
-			<div class="Logo" style="margin: auto auto auto auto;"></div>
-			<hr width=75% color=#a6a577 size=1>
-			<div class="place_To" style="margin: 30px auto 10px auto;">
+			<div class="Logo" style="margin: 25% auto auto 8%;"></div>
+			<!-- 로고 이미지란  -->
+			<div class="Logo_Name" style="margin: auto auto auto 5%;">Rolling Paper</div>
+			<!-- 로고이름란 -->
+			<div class="Logo_down_shadow" style="margin: 10% auto auto 15%;"></div>
+			<!-- 로고 선(border)과 그림자효과 (gradient) -->
+			<div class="Place_To" style="margin: 10% auto auto 12%;">
 				<font face=arial>&nbsp;To. </font> <a
 					href="https://www.facebook.com/sue9280?fref=ts" target=_blank><font
 					face=arial>'이수영'</font></a>
 			</div>
-			<div class="Place_Holder" style="margin: 5px auto 40px auto;">
+			<!-- To. 받는사람이름 -->
+			<div class="Place_Holder" style="margin: 5% auto 20% 13%;">
 				<br> <font>"Happy Birthday"</font>
 			</div>
-			<div class="Place_From" style="margin: 3px auto 5px auto;">
+			<!-- 받는 Title -->
+			<div class="Place_From" style="margin: 10% auto 5% 12%;">
 				<font face=arial>&nbsp;From.</font>
 			</div>
-			<div class="Participate" style="margin: 0px auto 5px auto;">
+			<!-- From. 보낸사람이름 -->
+			<div class="Participate" style="margin: 5% auto 20% 16%;">
 				<div class="Part_Image" id="name1"
 					style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
-						target=_blank><img alt="name1" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
-					</div>
+						target=_blank><img alt="name1"
+						src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg"
+						width=100% height=100%></a>
+				</div>
 				<div class="Part_Name" id="name1" style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
 						target=_blank>이나연</a>
-				</div> <!-- Participate List 1 -->
+				</div>
+				<!-- Participate List 1 -->
 				<div class="Part_Image" id="name2"
 					style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
-						target=_blank><img alt="name2" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
-					</div>
+						target=_blank><img alt="name2"
+						src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg"
+						width=100% height=100%></a>
+				</div>
 				<div class="Part_Name" id="name2" style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
 						target=_blank>이나연</a>
-				</div> <!-- Participate List 2 -->
+				</div>
+				<!-- Participate List 2 -->
 				<div class="Part_Image" id="name3"
 					style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
-						target=_blank><img alt="name3" src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg" width=100% height=100%></a>
-					</div>
+						target=_blank><img alt="name3"
+						src="https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-snc7/313739_267116959999406_430816484_n.jpg"
+						width=100% height=100%></a>
+				</div>
 				<div class="Part_Name" id="name3" style="margin: 0px auto 5px auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
 						target=_blank>이나연</a>
-				</div> <!-- Participate List 3 -->
+				</div>
+				<!-- Participate List 3 -->
 			</div>
+			<!-- 보내는 사람들 명단 -->
 		</div>
+		<!-- 왼쪽칸 -->
 		<div class="Right">
 			<div class="Right_Center">
 				<div class="Mo_Left"></div>
+				<!-- 왼쪽 마우스 오버 -->
 				<div class="Mo_Right"></div>
+				<!-- 오른쪽 마우스 오버 -->
 				<div class="Place_Holder2"></div>
+				<!-- center칸 맞추기 보조 -->
 				<div class="Place_Date"></div>
+				<!-- 날짜칸 칸 보조 -->
 				<div class="Date">
-				<font color=#728560>&nbsp;2012.5.5</font>
+					<font color=#728560>&nbsp;2012.5.5</font>
 				</div>
+				<!-- 날짜 -->
 			</div>
+			<!-- 오른쪽 가운데 칸 -->
 		</div>
+		<!-- 오른쪽 메인 칸 -->
 	</div>
+	<!-- 전체 container칸 -->
 </body>
 </html>
