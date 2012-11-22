@@ -1,0 +1,295 @@
+<%
+	function toDegree(radian){
+		return radian / (Math.PI * 2 ) * 360;
+	}
+	
+	var originalScreenSize = 400;
+%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+<script> 
+	var rollingpaper = <%-JSON.stringify(paper)%>
+	/*
+	function resizeChilds(contentsContainer) {
+		var $container = $(contentsContainer);
+		
+		var originalSize = <%-originalScreenSize%>;
+		
+		$container.find(".image_content").each(function(i,e){
+			var $e = $(e);
+			var heightratio = Number($e.attr("heightratio"));
+			var ratio = Number($e.attr("ratio"));
+		
+			var height = $container.height() * heightratio;
+			var width  = height/ratio;
+			$e.width(width);
+		//	$e.height(height);
+		});
+		console.log("ASDFASDFSADAFDS");
+	}*/
+	
+	$(document).ready(function(){
+		onBodyResize();
+	//	resizeChilds($('.Right_Center'));
+	});
+	function onBodyResize(){
+		$(".retain_size_ratio_base_height").each(function(i,e){
+			var $e = $(e);
+			var size_ratio = Number($(this).attr("size_ratio"));
+			var width = $(this).height() / size_ratio;
+			$(this).width(width);
+			
+			var pos_ratio = Number($(this).attr("position_ratio"));
+			var left = $(this).position().top / pos_ratio;
+			$(this).css("left",left);
+		});
+	}
+</script>
+<title>Rolling Paper</title>
+<style type="text/css">
+html,body {
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+	width:100%;
+	height:100%;
+}
+.image_content{
+	border-radius:10px 10px 10px 10px;
+}
+.image_content img{
+	border-radius:30px 30px 30px 30px;	
+	box-shadow: 10px 10px 10px gray;
+}
+a:link {
+	color: #9a9e72;
+	text-decoration: none;
+} /* unvisited link */
+a:visited {
+	color: #9a9e72;
+} /* visited link */
+a:hover {
+	color: #BDB76B;
+} /* mouse over link */
+a:active {
+	color: #0f4e3a;
+} /* selected link */
+.Container {
+	position: static;
+	width: 1600px;
+	height: 770px;
+	
+	width:100%;
+	height:100%;
+}
+
+.Left {
+	float: left;
+	width: 13%;
+	height: 100%;
+	background-color: #0f4e3a;
+	box-shadow: 0 0 20px 5px #888888;
+	position:relative;
+}
+
+.Right_Center {
+	float: inherit;
+	width: 100%;
+	height: 100%;
+	background-image:
+		url("https://www.facebook.com/download/113300708833161/web_paper.png");
+	position: relative;
+}
+
+.Right {
+	float: right;
+	width: 87%;
+	height: 100%;
+	display: inline;
+	position:relative;
+	z-index : -1;
+}
+
+.Logo {
+	width: 90%;
+	height: 25%;
+	background-image:
+		url("https://www.facebook.com/download/170751859737060/Rolling%20Paper%20Logo.png");
+	background-size: 160px 125px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.place_To {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Place_Holder {
+	width: 79%;
+	height: 18%;
+	background-color: #0c3b2d;
+	outline: #f64e02 dashed 2px;
+	outline-radius: 5px;
+	color: #ccbb86;
+	font-size: 150%;
+	font-weight: bold;
+	color: #ccbb86;
+}
+
+.Place_From {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Participate {
+	width: 80%;
+	height: 35%;
+	background-color: #0f4e3a;
+	left: 5%;
+	top: 60%;
+	overflow: scroll;
+	overflow-x: hidden;
+	color: #9a9e72;
+}
+
+.Part_Image {
+	float: left;
+	width: 22%;
+	height: 13%;
+	background-color: #1a533e;
+}
+
+.Part_Name {
+	float: right;
+	width: 70%;
+	height: 13%;
+	background-color: #0f4e3a;
+	line-height: 30px;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+
+::-webkit-scrollbar-track {
+	background: #1a533e;
+}
+
+::-webkit-scrollbar-thumb {
+	width: 8px;
+	height: 8px;
+	background: #738762;
+}
+
+.Date {
+	width: 13%;
+	height: 7%;
+	background-color: #ccbb86;
+	top: 93%;
+	left: 82%;
+	float: right;
+	line-height: 200%;
+	font-weight: bold;
+}
+
+.Place_Date {
+	width: 5%;
+	height: 7%;
+	float: right;
+}
+
+.Mo_Left {
+	float: left;
+	width: 5%;
+	height: 100%;
+}
+
+.Mo_Right {
+	float: right;
+	width: 5%;
+	height: 100%;
+}
+
+.Place_Holder2 {
+	width: 100%;
+	height: 93%;
+}
+</style>
+</head>
+<body onresize="onBodyResize();">
+	<div class="Container" style="margin: auto;">
+		<div class="Left">
+			<div class="Logo" style="margin: auto auto auto auto;"></div>
+			<hr width=75% color=#a6a577 size=1>
+			<div class="place_To" style="margin: 30px auto 10px auto;">
+				<font face=arial>&nbsp;To. </font> 
+				<a	href="https://www.facebook.com/<%-paper.receiver_fb_id%>" target=_blank>
+					<font face=arial><%-paper.receiver_name%></font>
+				</a>
+			</div>
+			<div class="Place_Holder" style="margin: 5px auto 40px auto;">
+				<br> <font><%-paper.title%></font>
+			</div>
+			<div class="Place_From" style="margin: 3px auto 5px auto;">
+				<font face=arial>&nbsp;From.</font>
+			</div>
+			<div class="Participate" style="margin: 0px auto 5px auto;">
+				<% paper.participants.forEach(function printBr(e, i, array) { %>
+					<div class="Part_Image" id="name1"style="margin: 0px auto 5px auto;">
+						<a href="https://www.facebook.com/<%-e.facebook_id%>"target=_blank>
+							<img alt="name1" src="<%-e.picture%>" width=100% height=100%>
+						</a>
+					</div>
+					<div class="Part_Name" id="name1" style="margin: 0px auto 5px auto;">
+						<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank><%-e.name%></a>
+					</div> <!-- Participate List 1 -->
+				<%});%>
+			</div>
+		</div>
+		<div class="Right">
+			<div class="Right_Center">
+				<%if(paper.image){
+					paper.image.forEach(function(e,i) {
+						var heightratio = e.height / originalScreenSize;
+						var y_ratio = e.y / originalScreenSize;
+						
+						var size_ratio = e.height/e.width;
+						var position_ratio = e.y/e.x;
+						//우선 오리지널 화면 사이즈에 대한 컨텐츠의 높이 비를 계산한다
+						%>
+						<div class ="image_content retain_size_ratio_base_height" 
+							 position_ratio = "<%-position_ratio%>"
+							 size_ratio ="<%-size_ratio%>"
+							 style ="width:<%-e.width%>px;height:<%-heightratio*100%>%;position:absolute;left:<%-e.x%>px;top:<%-y_ratio*100%>%;-webkit-transform:rotate(<%-toDegree(e.rotation)%>deg);">
+							 	<img style="width:100%;height:100%;" src="<%-e.image.replace('localhost',server_ip)%>"></img>
+						</div>
+					<%});	
+				}%>
+				<div class="Mo_Left"></div>
+				<div class="Mo_Right"></div>
+				<div class="Place_Holder2"></div>
+				<div class="Place_Date"></div>
+				<div class="Date">
+					<font color=#728560><%-paper.created_time%></font>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

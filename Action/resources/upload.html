@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<title>게임</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		<link href="/css/main.css" rel="stylesheet" type="text/css" />
+		
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/js/jquery-1.7.1.js"></script>
+		<script src="/js/sylvester.js"></script>
+		<script src="/js/sprintf.js"></script>
+	</head>
+
+	<body>
+		<form action='/user/join' method='post' enctype='multipart/form-data'>
+			<input type="file" name="imgs" multiple="true"/>
+			<input type="hidden" name="userid" value="0" />
+			<input type="hidden" name="paperid" value="1" />
+			<input type="hidden" name="x" value="100" />
+			<input type="hidden" name="y" value="60" />
+			<input type="submit" value="upload"/>
+		</form>
+	</body>
+</html>

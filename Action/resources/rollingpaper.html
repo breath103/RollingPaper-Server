@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<script> 
+	var rollingpaper = <%-JSON.stringify(paper)%>
+</script>
+<title>Rolling Paper</title>
+<style type="text/css">
+html,body {
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+}
+
+a:link {
+	color: #9a9e72;
+	text-decoration: none;
+} /* unvisited link */
+a:visited {
+	color: #9a9e72;
+} /* visited link */
+a:hover {
+	color: #BDB76B;
+} /* mouse over link */
+a:active {
+	color: #0f4e3a;
+} /* selected link */
+.Container {
+	position: static;
+	width: 1600px;
+	height: 770px;
+}
+
+.Left {
+	float: left;
+	width: 13%;
+	height: 100%;
+	background-color: #0f4e3a;
+	box-shadow: 0 0 20px 5px #888888;
+}
+
+.Right_Center {
+	float: inherit;
+	width: 100%;
+	height: 100%;
+	background-image:
+		url("https://www.facebook.com/download/113300708833161/web_paper.png");
+}
+
+.Right {
+	float: right;
+	width: 87%;
+	height: 100%;
+	display: inline;
+}
+
+.Logo {
+	width: 90%;
+	height: 25%;
+	background-image:
+		url("https://www.facebook.com/download/170751859737060/Rolling%20Paper%20Logo.png");
+	background-size: 160px 125px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.place_To {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Place_Holder {
+	width: 79%;
+	height: 18%;
+	background-color: #0c3b2d;
+	outline: #f64e02 dashed 2px;
+	outline-radius: 5px;
+	color: #ccbb86;
+	font-size: 150%;
+	font-weight: bold;
+	color: #ccbb86;
+}
+
+.Place_From {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Participate {
+	width: 80%;
+	height: 35%;
+	background-color: #0f4e3a;
+	left: 5%;
+	top: 60%;
+	overflow: scroll;
+	overflow-x: hidden;
+	color: #9a9e72;
+}
+
+.Part_Image {
+	float: left;
+	width: 22%;
+	height: 13%;
+	background-color: #1a533e;
+}
+
+.Part_Name {
+	float: right;
+	width: 70%;
+	height: 13%;
+	background-color: #0f4e3a;
+	line-height: 30px;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+
+::-webkit-scrollbar-track {
+	background: #1a533e;
+}
+
+::-webkit-scrollbar-thumb {
+	width: 8px;
+	height: 8px;
+	background: #738762;
+}
+
+.Date {
+	width: 13%;
+	height: 7%;
+	background-color: #ccbb86;
+	top: 93%;
+	left: 82%;
+	float: right;
+	line-height: 200%;
+	font-weight: bold;
+}
+
+.Place_Date {
+	width: 5%;
+	height: 7%;
+	float: right;
+}
+
+.Mo_Left {
+	float: left;
+	width: 5%;
+	height: 100%;
+}
+
+.Mo_Right {
+	float: right;
+	width: 5%;
+	height: 100%;
+}
+
+.Place_Holder2 {
+	width: 100%;
+	height: 93%;
+}
+</style>
+</head>
+<body>
+	<div class="Container" style="margin: auto;">
+		<div class="Left">
+			<div class="Logo" style="margin: auto auto auto auto;"></div>
+			<hr width=75% color=#a6a577 size=1>
+			<div class="place_To" style="margin: 30px auto 10px auto;">
+				<font face=arial>&nbsp;To. </font> <a
+					href="https://www.facebook.com/sue9280?fref=ts" target=_blank><font
+					face=arial>'이수영'</font></a>
+			</div>
+			<div class="Place_Holder" style="margin: 5px auto 40px auto;">
+				<br> <font>"Happy Birthday"</font>
+			</div>
+			<div class="Place_From" style="margin: 3px auto 5px auto;">
+				<font face=arial>&nbsp;From.</font>
+			</div>
+			<div class="Participate" style="margin: 0px auto 5px auto;">
+				<% rollingpaper.participants.forEach(function printBr(e, i, array) { %>
+					<div class="Part_Image" id="name1"style="margin: 0px auto 5px auto;">
+						<a href="https://www.facebook.com/<%"target=_blank>
+							<img alt="name1" src="<%-e.picture%>" width=100% height=100%>
+						</a>
+					</div>
+					<div class="Part_Name" id="name1" style="margin: 0px auto 5px auto;">
+						<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank><%-e.name%></a>
+					</div> <!-- Participate List 1 -->
+				<%}%>
+			</div>
+		</div>
+		<div class="Right">
+			<div class="Right_Center">
+				<div class="Mo_Left"></div>
+				<div class="Mo_Right"></div>
+				<div class="Place_Holder2"></div>
+				<div class="Place_Date"></div>
+				<div class="Date">
+				<font color=#728560>&nbsp;2012.5.5</font>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

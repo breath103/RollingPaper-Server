@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<title>게임</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		<link href="/css/main.css" rel="stylesheet" type="text/css" />
+		
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/js/jquery-1.7.1.js"></script>
+		<script src="/js/sylvester.js"></script>
+		<script src="/js/sprintf.js"></script>
+	
+		<script> 
+			Vector.prototype.length = function(){
+				return Math.sqrt( Math.pow(this.e(1),2) + Math.pow(this.e(2),2) );
+			}
+			function between(min,x,max){
+				return min<=x && x<=max;
+			}
+		
+			$.fn.verticalProgress = function(){
+					
+			};
+		
+			var socket = null;
+	        function connect() {
+	            console.log('Connecting to local server...');
+	            if (socket == null) {
+	                socket = io.connect(null,{'auto connect': false});
+	            	socket.on('connect', function () {
+	            		//console.log("Connected");
+	            		$(".loading-view").fadeOut();
+	            	});
+	        		socket.on('message', function (data){
+	       				console.log(data);
+	        		});
+	        		socket.on('disconnect',function(){
+	        			//연결이 끊어진 경우
+	        			$(".loading-view").fadeIn();
+	            		alert("Disconnected!!");
+	        		});
+	        	}
+	        	socket.socket.connect();
+	        }
+	        
+
+	        $(document).ready(function(){
+	    		if (window.DeviceMotionEvent==undefined) {
+	    			alert("브라우저가 모션 센서를 지원하지 않습니다.");
+	    		}
+	    		else{	    		}
+	    		
+	    		$(window).resize(function(){
+	    			$("article").css("height",$("body").height() - $("header").height());
+	    		});
+	    		
+	    		$("article").css("height",$("body").height() - $("header").height());
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		(function(){
+	    			var vLastTouch = null;
+		    		
+		    		function methodForMouse() {
+			    		var isInMouseDragging = false;
+			    		$(".canvas_page").bind("mousedown",function(event){
+			    			isInMouseDragging = true;
+			    			event = event.originalEvent;
+				       		socket.emit("paintStart",{
+					   			screen : {
+					    			width  : $(this).width(),
+					    			height : $(this).height()
+					   			} 
+					   		//	subid : index
+					   		});
+							return false;   	
+				    	});
+				    	$(".canvas_page").bind("mousemove",function(event){
+			    			if(isInMouseDragging){
+					    		event = event.originalEvent;
+					    		
+					    		
+					    		var cPos = {
+						    		x : event.pageX - $(this).offset().left, 
+					    			y : event.pageY - $(this).offset().top
+					    		}
+					    		console.log(cPos.x + " : " + cPos.y);
+					    		if(cPos.x > 0 && cPos.y > 0)
+					    		{
+					    			$("#logP").html(deviceMotionSendCheck++);
+					    			socket.emit("deviceMotion",{ x : cPos.x, 
+					    										 y : cPos.y,
+					    										 time : (new Date()).getTime()});
+					    		}
+					    		return false;
+				    		}
+				    	});
+				    	$(".canvas_page").bind("mouseup",function(event){
+			    			if(isInMouseDragging)
+			    			{
+			    				socket.emit("paintEnd",{subid : 0});
+			    				isInMouseDragging = false;
+			    				return false;
+			    			}
+			    		});
+		    		}
+		    		methodForMouse();
+		    		
+		    		
+		    		var deviceMotionSendCheck = 0;
+		    		
+		    		var maxPoint = 10000;
+		    		var currentPointCount = 0;
+		    		
+		    		$("article").bind("touchstart",function(event){
+			    		return false;
+		    		});
+			    	
+			    	
+			    	var isInTouch = false;
+			    	
+			    	var touchStartPos = null;
+			    	var currentPos = null;
+		    		$(".canvas_page").bind("touchstart",function(event){
+			    		event = event.originalEvent;
+			    		for(var index=0;index < event.touches.length;index++){
+			    			var touch = event.touches[index];
+				    		
+				    		touchStartPos = { 
+				    			x : touch.pageX - $(this).offset().left, 
+						    	y : touch.pageY - $(this).offset().top
+						    };
+						    
+						    currentPos = {
+							    x : Math.random() * $(this).width(),
+							    y : Math.random() * $(this).height()
+						    }
+				    		
+				    		socket.emit("paintStart",{
+				    			screen : {
+					    			width  : $(this).width(),
+					    			height : $(this).height()
+				    			} ,
+				    			subid : index
+				    		});
+				    	}
+				    	
+				    	currentPointCount=0;
+				    	$(".progress-container").fadeIn().html( ++currentPointCount/maxPoint * 100 );
+				    	
+				    	isInTouch = true;
+				    	
+				    	return false;   	
+			    	}).bind("touchmove",function(event){
+			    		if(isInTouch)
+			    		{
+				    		event = event.originalEvent;
+				    		
+				    		for(var index=0;index < event.touches.length;index++){
+				    			var touch = event.touches[index];
+				    		
+				    			var cPos = { 
+				    				x : touch.pageX - $(this).offset().left, 
+						    		y : touch.pageY - $(this).offset().top
+						    	};
+						    	currentPos.x += (cPos.x - touchStartPos.x);
+						    	currentPos.y += (cPos.y - touchStartPos.y);
+						    	
+						    	
+						    	$("#logP").html(deviceMotionSendCheck++);
+						    	socket.emit("deviceMotion",{ x : currentPos.x, 
+				    										 y : currentPos.y,
+				    										 time : (new Date()).getTime(),
+				    										 subid : index });
+				    			$(".progress-container").css({left:touch.pageX ,top:touch.pageY });
+				    			$(".progress-container").html( ++currentPointCount/maxPoint * 100);
+						    	if(currentPointCount/maxPoint * 100 >= 100){
+							    	$(this).trigger("touchend");
+							    }
+				    		}
+			    		}
+			    		return false;
+			    	}).bind("touchend touchcancel",function(event){
+			    		if(isInTouch)
+			    		{
+			    			socket.emit("paintEnd",{/*subid : event.originalEvent.touches.length + 1*/});
+			    			$(".progress-container").fadeOut();
+			    			isInTouch = false;
+			    		}
+			    		return false;
+			    	});
+			    })();
+	    	});
+	    </script>
+		<style>
+			html,body{
+				width:100%;
+				height:100%;
+				overflow:hidden;
+			}
+			*{
+				font-size: 1em;
+				letter-spacing: -1px;
+				font-family: NanumGothic,"Apple SD Gothic Neo","Malgun Gothic",AppleGothic,Dotum,sans-serif;
+				margin: 0px;
+				padding: 0px;
+			}
+			
+			header {
+				height:40px;
+				background: -webkit-linear-gradient(#7ec0e9 0%, #f872a7 100%)
+			}
+			header p{	
+				text-align: center; 
+				color: white; 
+				vertical-align: middle;
+				padding-top: 9px;
+			}
+			article{
+				position:relative;
+				width:100%;
+				height:100%;
+				overflow-y: scroll;
+			}
+			.canvas-container{
+				width: 100%;
+				height: 100%;
+				padding: 40px;
+				box-sizing: border-box;
+			}
+			.canvas-container .canvas_page{
+				width :100%;
+				height:100%;
+				box-sizing: border-box;
+				background-color:gray;
+			}
+			section{
+				color : gray;
+			}
+			.loading-view{
+				position: absolute;
+				left:0px;
+				top:0px;
+				width:100%;
+				height:100%;
+				background-color:black;
+				
+				font-size: 50px;
+				color: white;
+				text-align: center;
+			}
+			.progress-container{
+				color:black;
+				position:absolute;
+				top: 0px;
+				left: 0px;
+				display: none;
+				background-color: #f93b7d;
+				border-radius: 50%;
+			}
+		</style>
+	</head>
+
+	<body onLoad="connect()">
+		<header>
+			<p id="logP">
+				Action
+			</p>
+		</header>
+		<article>
+			<div class="canvas-container">
+				<div class="canvas_page">
+				</div>
+			</div>
+			<div class="progress-container">
+			</div>
+		</article>
+		<div class="loading-view">
+			Loading...
+		</div>
+	</body>
+</html>

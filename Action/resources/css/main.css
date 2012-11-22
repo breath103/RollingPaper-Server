@@ -1,0 +1,67 @@
+html,body{ width:100%;height:100%;overflow:hidden;}
+*{	font-size: 1em;letter-spacing: -1px;font-family: NanumGothic,"Apple SD Gothic Neo","Malgun Gothic",AppleGothic,Dotum,sans-serif;margin: 0px;padding: 0px;}
+		
+
+header {height:40px; background: -webkit-linear-gradient(#7ec0e9 0%, #1872a7 100%); }
+header p{text-align: center;  color: white; vertical-align: middle;padding-top: 9px;}
+article{ position:relative; width:100%; height:100%; overflow-y: scroll;}
+
+.scene_container{ width:100%; height:100%; position:absolute; left:0px; top :0px;}
+.scene_container .top-menu-container{ height: 100px; text-align:center;  margin-left:auto; margin-right:auto; width:285px;	}
+		
+.feeling-slider-view{width:20%;height:100%;overflow:scroll;display:inline-block;position: relative;}
+.feeling-slider-view .feeling-slider-dash{position:fixed;width: 0px;left:50%; margin-left:  -4px;height:100%;border-width: 4px;border-style: dashed;border-color: black;}
+.feeling-slider-view .feeling-slider-container{width:100%;height:200%;}
+.feeling-slider-view .feeling-slider-container .feeling-slider-button { width:29px;height: 49px;margin-left: auto;margin-right: auto;position:relative;background-image : url("/img/slider-button.png");background-repeat: no-repeat;background-size: cover;}
+		
+		
+.event_date_input{ width : 100%; height: 1em;}
+.event_writter_input{width : 100%;height: 1em;}
+.event_text_input {width  :100%;height: 90px;border: 1px solid #898989;-webkit-appearance: none;box-sizing: border-box;border-radius: 5px;}
+
+.control-dot {border-radius: 50%;width:35px	;height:35px;background-color: #E7E0E0;box-shadow: 3px 3px 8px black;margin-left: auto;margin-right: auto;margin-bottom: 5px;}
+		
+		
+.calendar-month-view { width  : 100%; height : 100%; font-size: 5em; overflow-x:hidden; overflow-y:scroll;}
+.calendar-month-view .calendar-month-container { display:inline-block; width:100%; height:auto;  position: relative;}
+.calendar-month-view .calendar-month-container .calendar-month{ width:100%; height:100px; text-align : center; line-height: 117px; float:left; vertical-align: middle; display: inline-block;}
+	
+.calendar-day-view { width  : 100%; height : 100%; font-size: 5em; overflow-x:hidden; overflow-y:scroll;}
+.calendar-day-view .calendar-day-container { display:inline-block; width:100%; height:auto; position: relative;}
+.calendar-day-view .calendar-day-container .calendar-day{ width:100%; height:100px; text-align : center; line-height: 117px; float:left; vertical-align: middle; display: inline-block;}
+
+#control-state{width:50px;	height:50px; margin-bottom:25px;}
+		
+.pattern-lock {width:100%;height:100%; position:absolute; top:-100%;background-color: #464646;text-align : center;opacity: 0.9;left:0px;}
+.pattern-lock .pattern-lock-container{ display:inline-block; width:100%; height:33%; float:left;}
+.pattern-lock .pattern-lock-dot{display: inline-block;width  : 60px;height : 60px;border-radius:50%;background-color: #90989b;}
+.pattern-lock .pattern-lock-dot .dot-layer{margin-top:10%;width : 80%;height: 80%;border-radius: 50%;display: inline-block;background-color: #464646;z-index: -1;}
+.pattern-lock .pattern-lock-dot .dot{margin-top:23%;width : 54%;height: 54%;border-radius: 50%;display: inline-block;background-color: #90989b;z-index: 10;}
+.pattern-lock .pattern-line{border-radius: 10px;width:20px;background-color: black;}
+.pattern-lock .selected .dot{background-color: #6AB1DD;}
+.pattern-lock .selected { background-color: #6AB1DD; }
+.pattern-lock .wrong-dot .dot{ background-color: #F01E5B;}
+.pattern-lock .wrong-dot { background-color: #F01E5B;}	
+.pattern-table-container{ max-width:500px;width:100%;max-height:500px;height:100%;margin-left:auto;margin-right:auto;}
+.pattern-table-container table{position: relative;top: -100%;}
+
+.line-overlay {z-index: 1000;}
+.line-overlay line {stroke:rgb(150,150,150);stroke-width:20;stroke-linecap:round;}
+		
+.paint-div { width:100%; height:100%; position:absolute; background-color:black; text-align : center;opacity: 0.9;left : -100%;top  : 0px;}
+.paint-div #draw-canvas { width :100%; height:100%;}
+.paint-div .end-draw { display: block;position: relative;top: -50%;left: 0;}
+.paint-div .draw-option { display: block;position: relative;top: -30%;left: 0;}
+.paint-div .option-container { 
+	width:100%;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	position: absolute;
+	top:0px;
+	left:0px;
+	background-color: #ff7000;
+	display: none;
+}
+.paint-div .option-container .color-slider{
+	width: 80%;
+}
