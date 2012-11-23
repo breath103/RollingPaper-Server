@@ -31,10 +31,14 @@ a:active {
 
 .Left {
 	float: left;
+	position: relative;
 	width: 13%;
 	height: 100%;
 	background-color: #0f4e3a;
-	box-shadow: 0 0 20px 5px #888888;
+	box-shadow: 0 0 29px 8px #888888;
+	left: 0px;
+	right: 0px;
+	z-index: 1;
 }
 
 .Logo {
@@ -62,9 +66,27 @@ a:active {
 	border: 1px solid #a6a577;
 	border-bottom-style: none;
 	border-left-style: none;
-	border-right-style: none;	
+	border-right-style: none;
+	background-image:
+		url("https://www.facebook.com/download/379048475519203/web_%EA%B7%B8%EB%A6%BC%EC%9E%90.png");
+	background-size: 100% 100%;
 }
 
+.From_down_shadow {
+	position: absolute;
+	width: 73%;
+	height: 3%;
+	top: 83%;
+	left: 0px;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	background-image:
+		url("https://www.facebook.com/download/379048475519203/web_%EA%B7%B8%EB%A6%BC%EC%9E%90.png");
+	background-size: 100% 100%;
+	-webkit-transform: rotate(180deg);
+}
 
 .Place_To {
 	width: 85%;
@@ -72,9 +94,6 @@ a:active {
 	background-color: #0f4e3a;
 	color: #ccbb86;
 	font-size: 100%;
-}
-
-.Mark{text-size:
 }
 
 .Place_Holder {
@@ -89,6 +108,29 @@ a:active {
 	color: #ccbb86;
 	background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),
 		to(#0c3b2c) );
+	text-align: center;
+}
+
+.Place_Mark {
+	position: absolute;
+	width: 66%;
+	height: 2%;
+	background-image:
+		url("https://www.facebook.com/download/103527653148524/web_apostrophe.png");
+	background-size: 100% 100%;
+	top: 43%;
+	left: 17%;
+}
+
+.Place_Participate_Text {
+	position: absolute;
+	width: 50%;
+	height: 12%;
+	top: 44%;
+	left: 25%;
+	color: #ccbb86;
+	text-align: center;
+	font-weight: bold;
 }
 
 .Place_From {
@@ -103,9 +145,27 @@ a:active {
 	width: 72%;
 	height: 27%;
 	background-color: #0f4e3a;
+	color: #9a9e72;
 	overflow: scroll;
 	overflow-x: hidden;
-	color: #9a9e72;
+}
+Participate ::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+Participate ::-webkit-scrollbar-button {
+	display: none;
+}
+
+Participate ::-webkit-scrollbar-track {
+	background: #1a533e;
+}
+
+Participate ::-webkit-scrollbar-thumb {
+	width: 8px;
+	height: 8px;
+	background: #738762;
 }
 
 .Part_Image {
@@ -123,30 +183,13 @@ a:active {
 	line-height: 40px;
 }
 
-::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
-}
-
-::-webkit-scrollbar-button {
-	display: none;
-}
-
-::-webkit-scrollbar-track {
-	background: #1a533e;
-}
-
-::-webkit-scrollbar-thumb {
-	width: 8px;
-	height: 8px;
-	background: #738762;
-}
-
 .Right {
 	float: right;
 	width: 87%;
 	height: 100%;
 	display: inline;
+	overflow: scroll;
+	overflow-y: hidden;
 }
 
 .Right_Center {
@@ -196,10 +239,13 @@ a:active {
 		<div class="Left">
 			<div class="Logo" style="margin: 25% auto auto 8%;"></div>
 			<!-- 로고 이미지란  -->
-			<div class="Logo_Name" style="margin: auto auto auto 5%;">Rolling Paper</div>
+			<div class="Logo_Name" style="margin: auto auto auto 5%;">Rolling
+				Paper</div>
 			<!-- 로고이름란 -->
 			<div class="Logo_down_shadow" style="margin: 10% auto auto 15%;"></div>
-			<!-- 로고 선(border)과 그림자효과 (gradient) -->
+			<!-- logo : 로고 선(border)과 그림자효과 (gradient) -->
+			<div class="From_down_shadow" style="margin: 10% auto auto 15%"></div>
+			<!-- from : 로고 선(border)과 그림자효과 (gradient) -->
 			<div class="Place_To" style="margin: 10% auto auto 12%;">
 				<font face=arial>&nbsp;To. </font> <a
 					href="https://www.facebook.com/sue9280?fref=ts" target=_blank><font
@@ -207,9 +253,13 @@ a:active {
 			</div>
 			<!-- To. 받는사람이름 -->
 			<div class="Place_Holder" style="margin: 5% auto 20% 13%;">
-				<br> <font>"Happy Birthday"</font>
+				<br>
 			</div>
 			<!-- 받는 Title -->
+			<div class="Place_Mark"></div>
+			<!-- 큰따옴표 -->
+			<div class="Place_Participate_Text">생일완전!!축하해~</div>
+			<!-- 메세지 title적는 란 -->
 			<div class="Place_From" style="margin: 10% auto 5% 12%;">
 				<font face=arial>&nbsp;From.</font>
 			</div>
@@ -224,7 +274,7 @@ a:active {
 				</div>
 				<div class="Part_Name" id="name1" style="margin: auto auto 4% auto;">
 					<a href="https://www.facebook.com/nayeon.lee.9279?fref=ts"
-						target=_blank>이나연</a>
+						target=_blank>Na Yeon Lee</a>
 				</div>
 				<!-- Participate List 1 -->
 				<div class="Part_Image" id="name2"
@@ -275,5 +325,6 @@ a:active {
 		<!-- 오른쪽 메인 칸 -->
 	</div>
 	<!-- 전체 container칸 -->
+
 </body>
 </html>
