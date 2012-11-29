@@ -5,11 +5,24 @@ var Step     = require("step");
 
 function DBTemplate(){
 	var outerThis = this;
-	this.client = mysql.createClient({
+	this.client = mysql.createConnection({
 		host : "dasan.skku.edu",
 	    user : "inmunskku",
-	    password : "1278"
+	    password : "1278",
+	    multipleStatements : true
 	});
+	
+	this.client.connect();
+/*
+connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+  if (err) throw err;
+
+  console.log('The solution is: ', rows[0].solution);
+});
+
+connection.end();
+*/	
+	
 	
 	Step(
 		function(){
@@ -25,6 +38,11 @@ function DBTemplate(){
 		}
 	);	
 }
+//프로시져를 호출한경우 셀렉트 결과물이 여러개 올수 있다. 이경우를 대비하여 함수를 따로 만든다
+DBTemplate.prototype.call =  function(query,values,callback){
+	this.client.query(query,values,callback);
+};
+
 DBTemplate.prototype.query = function(query,values,callback){
 	this.client.query(query,values,callback);
 };

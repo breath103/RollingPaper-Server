@@ -13,6 +13,28 @@ var vm 		 = require('vm');
 var DBTemplate = require("./DBTemplate.js");
 var util     = require("util");
 var Step 	 = require("step");
+var facebook = require('facebook-graph');
+var useragent = require('express-useragent');
+
+/*
+var facebookGraph;
+function initFacebook(){
+	var accessToken ="AAACEdEose0cBALSZB7KXUqEccnZCMvPuxbmNjZCjhrf9bD9yHZBJ3UUACNMmjX2InWzrFZCueKfzxwnQ6f9FZAKHuZCUc7iRra4MX3lXtJSC4zofPvR65XgwAl8yGHsaYsZD";
+	facebookGraph = new facebook.GraphAPI(accessToken);
+//	facebookGraph.putObject("230449603747777","feed",{message: 'The computerz iz writing on my wallz!1'}, print);
+}
+function writeMessageToPage(message){
+	function print(error, data) {
+       	 console.log(error || data);
+    }
+	facebookGraph.putObject("230449603747777","feed",{message : message}, print);
+}
+
+initFacebook();
+*/
+
+
+
 
 var getNetworkIPs = (function () {
     var ignoreRE = /^(127\.0\.0\.1|::1|fe80(:1)?::1(%.*)?)$/i;
@@ -91,6 +113,7 @@ function initExpressEndSocketIO(){
 		app.use(express.methodOverride());
 		app.use(express.bodyParser());
 		app.use(express.static(__dirname + '/resources'));
+		app.use(useragent.express());
 		app.use(app.router);
 	});
 	app.configure('production', function() {
@@ -100,6 +123,7 @@ function initExpressEndSocketIO(){
 	app.configure('development', function() {
 	    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 	});
+	
 	
 	
 	app.get('/', function(req, res) {
@@ -166,7 +190,7 @@ function initExpressEndSocketIO(){
 					} 
 					else {
 						console.log(results);
-						res.render('text.ejs', {text : results});
+						res.render('text.ejs', {text : results[0]});
 					}
 				}
 			);
@@ -183,23 +207,53 @@ function initExpressEndSocketIO(){
 			Step(
 				function(){
 					DBTemplate.query ("call createTicketWithFacebookID(?,?)",
-							   [friend_fb_id,paper_idx],
-							   this);
+							  			 [friend_fb_id,paper_idx],
+							  			 this);
 				},
-				function(error,results){
+				function(error,allResults){
+					var results = allResults[0];
 					if(error) console.log(error);
-					var friend_id = results[0];
+					var friend_id = results[0].guest_idx;
 					console.log(friend_fb_id," : ",friend_id);
 					if(friend_id){
 						console.log("joined user");
+						res.render('text.ejs', {text : {
+							facebook_id : friend_fb_id,
+							friend_id	: friend_id
+						}});	
 					}
 					else {
 						console.log("not joined user");
+						//앱을 사용하는 유저가 아닌경우, 
+						//초대한 사람의 정보를 조회하여 액세스 토큰을 얻는다
+						Step(
+							function(){
+								console.log(user_idx);
+								DBTemplate.query("select * from USER where idx = ?; select * from ROLLING_PAPER where idx = ?",[user_idx,paper_idx],this);
+							},
+							function(error,results){
+								if(error) console.log(error);
+								
+								var user  = results[0][0];
+								var paper = results[1][0];
+								
+								var facebookGraph = new facebook.GraphAPI(user.facebook_accesstoken);
+								console.log(results," facebook_graph : ",facebookGraph);
+								facebookGraph.putObject(friend_fb_id,"feed",{ 
+								    message: util.format('%s님이 %s님에게 보낼 "%s" 이벤트를 당신과 함께 준비하고 싶어합니다.',user.name,paper.receiver_name,paper.title), 
+								    link : util.format("http://%s/paper?v=%d",server_ip,paper_idx), //'http://www.takwing.idv.hk/facebook/demoapp_jssdk/', 
+								    name: 'Rolling Paper', 
+								    description: 'RollingPaper'
+								  } , this);
+							},
+							function(error,result){
+								if(error) console.log(error);
+								console.log(result);
+								res.render('text.ejs', {text : result});	
+							}
+						);
 					}
-					res.render('text.ejs', {text : {
-						facebook_id : friend_fb_id,
-						friend_id	: friend_id
-					}});		
+						
 				}
 			);
 		}
@@ -310,6 +364,8 @@ function initExpressEndSocketIO(){
 	});
 	//웹에서 페이퍼를 볼때
 	app.get("/paper",function(req,res){
+		console.log(req.useragent);
+	
 		var paper_idx = req.param("v");
 		console.log(req.params);
 		if(paper_idx)
@@ -355,10 +411,13 @@ function initExpressEndSocketIO(){
 					console.log("sound results ",results);
 					
 					console.log(contentsResults);
-					res.render('paper.ejs', {
-						server_ip : server_ip,
-						paper : contentsResults
-					});
+					
+					var viewName = req.useragent.isMobile ? "mobilepaper.ejs" : 'paper.ejs';
+					
+						res.render(viewName, {
+							server_ip : server_ip,
+							paper : contentsResults
+						});
 				}
 			);
 			})();
@@ -433,7 +492,7 @@ function initExpressEndSocketIO(){
 										this);
 					},
 					function(error,results){ 
-						res.render('text.ejs', {text : results[0]});
+						res.render('text.ejs', {text : results[0][0]});
 						console.log("upload : ",results);
 					}
 				);
@@ -478,7 +537,7 @@ function initExpressEndSocketIO(){
 										this);
 					},
 					function(error,results){ 
-						res.render('text.ejs', {text : results[0]});
+						res.render('text.ejs', {text : results[0][0]});
 						console.log("uploade",results);
 					}
 				);
