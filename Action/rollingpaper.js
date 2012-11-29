@@ -2,7 +2,6 @@ var http 	 = require('http');
 var express  = require('express');
 var app      = express();
 var socketIO = require('socket.io');
-var sync 	 = require('synchronize')
 var io 		 = null;
 var fs   	 = require('fs');
 var path 	 = require("path");
@@ -88,7 +87,8 @@ var getNetworkIPs = (function () {
 
 
 var port = 8001;
-var server_ip = null;
+var server_ip = "210.122.0.164" + ":" + port;
+/*
 getNetworkIPs(function (error, ip) {
     console.log(ip);
     server_ip = ip[0]+":"+port;
@@ -96,6 +96,7 @@ getNetworkIPs(function (error, ip) {
         console.log('error:', error);
     }
 }, false);
+*/
 Array.prototype.remove = function(o){
 	this.splice(this.indexOf(o), 1);
 };
@@ -229,7 +230,8 @@ function initExpressEndSocketIO(){
 						Step(
 							function(){
 								console.log(user_idx);
-								DBTemplate.query("select * from USER where idx = ?; select * from ROLLING_PAPER where idx = ?",[user_idx,paper_idx],this);
+								DBTemplate.query("select * from USER where idx = ?; select * from ROLLING_PAPER where idx = ?"
+												 ,[user_idx,paper_idx],this);
 							},
 							function(error,results){
 								if(error) console.log(error);
@@ -240,8 +242,10 @@ function initExpressEndSocketIO(){
 								var facebookGraph = new facebook.GraphAPI(user.facebook_accesstoken);
 								console.log(results," facebook_graph : ",facebookGraph);
 								facebookGraph.putObject(friend_fb_id,"feed",{ 
-								    message: util.format('%s님이 %s님에게 보낼 "%s" 이벤트를 당신과 함께 준비하고 싶어합니다.',user.name,paper.receiver_name,paper.title), 
-								    link : util.format("http://%s/paper?v=%d",server_ip,paper_idx), //'http://www.takwing.idv.hk/facebook/demoapp_jssdk/', 
+									message: util.format('%s님이 %s님에게 보낼 "%s" 이벤트를 당신과 함께 준비하고 싶어합니다.',
+														  user.name,paper.receiver_name,paper.title), 
+								    link : util.format("http://%s/paper?v=%d",server_ip,paper_idx), 
+								    	   //'http://www.takwing.idv.hk/facebook/demoapp_jssdk/', 
 								    name: 'Rolling Paper', 
 								    description: 'RollingPaper'
 								  } , this);
@@ -260,66 +264,6 @@ function initExpressEndSocketIO(){
 		else {
 			
 		}
-
-	/*
-		var user_idx  		 = req.body[ "user_idx"  ];
-		var paper_idx 	 	 = req.body[ "paper_idx" ];
-		var facebook_friends = JSON.parse(req.body["facebook_friends"]); //문자열로 패칭되서 넘어오는 페이스북 친구들을 모두 받아온다.
-		if(user_idx && paper_idx){
-			var invitedFriend = [];
-			var notInvitedFriend = [];
-			var stepFunctionArray = [];
-			//연쇄적으로 데이터를 쭉 가져오는 부분인데, 우선 첫번째 호출
-			var firstFacebookId = facebook_friends.shift(1);
-			stepFunctionArray.push(function(){
-				DBTemplate.query ("call createTicketWithFacebookID(?,?)",
-								   [firstFacebookId,paper_idx],
-								   this);
-			});
-			// 중간 호출들
-			facebook_friends.forEach(function(facebook_id,i){
-				stepFunctionArray.push(function(error,results){
-					if(error) console.log(error);
-					
-					var friend_id = results[0];
-					console.log(facebook_id," : ",friend_id);
-					if(friend_id)
-					{
-						invitedFriend.push(friend_id);
-					}
-					else 
-					{
-						notInvitedFriend.push(friend_id);
-					}	
-					DBTemplate.query ("call createTicketWithFacebookID(?,?)",
-									  [facebook_id,paper_idx],
-									  this);
-				});
-			});
-			
-			
-			stepFunctionArray.push(function(error,results){
-				if(error) console.log(error);
-				var friend_id = results[0];
-				console.log(facebook_id," : ",friend_id);
-				if(friend_id){
-					invitedFriend.push(friend_id);
-				}
-				else {
-					notInvitedFriend.push(friend_id);
-				}	
-				res.render('text.ejs', {text : {
-					invited 	: invitedFriend,
-					not_invited : notInvitedFriend
-				}});
-			});
-			
-			Step.apply(Step,stepFunctionArray);
-		}
-		else {
-			
-		}
-		*/
 	});
 	
 	//만들기
