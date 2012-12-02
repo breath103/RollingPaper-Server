@@ -1,109 +1,26 @@
-var http 	 = require('http');
-var express  = require('express');
-var app      = express();
-var socketIO = require('socket.io');
-var io 		 = null;
-var fs   	 = require('fs');
-var path 	 = require("path");
-var url  	 = require("url");
-var net  	 = require("net");
-var async    = require('async');
-var vm 		 = require('vm');
+var http 	   = require('http');
+var express    = require('express');
+var app        = express();
+var fs   	   = require('fs');
+var path 	   = require("path");
+var url  	   = require("url");
+var net  	   = require("net");
+var async      = require('async');
+var vm 		   = require('vm');
 var DBTemplate = require("./DBTemplate.js");
-var util     = require("util");
-var Step 	 = require("step");
-var facebook = require('facebook-graph');
-var useragent = require('express-useragent');
-
-/*
-var facebookGraph;
-function initFacebook(){
-	var accessToken ="AAACEdEose0cBALSZB7KXUqEccnZCMvPuxbmNjZCjhrf9bD9yHZBJ3UUACNMmjX2InWzrFZCueKfzxwnQ6f9FZAKHuZCUc7iRra4MX3lXtJSC4zofPvR65XgwAl8yGHsaYsZD";
-	facebookGraph = new facebook.GraphAPI(accessToken);
-//	facebookGraph.putObject("230449603747777","feed",{message: 'The computerz iz writing on my wallz!1'}, print);
-}
-function writeMessageToPage(message){
-	function print(error, data) {
-       	 console.log(error || data);
-    }
-	facebookGraph.putObject("230449603747777","feed",{message : message}, print);
-}
-
-initFacebook();
-*/
-
-
-
-
-var getNetworkIPs = (function () {
-    var ignoreRE = /^(127\.0\.0\.1|::1|fe80(:1)?::1(%.*)?)$/i;
-
-    var exec = require('child_process').exec;
-    var cached;
-    var command;
-    var filterRE;
-
-    switch (process.platform) {
-    case 'win32':
-    //case 'win64': // TODO: test
-        command = 'ipconfig';
-        filterRE = /\bIP(v[46])?-?[^:\r\n]+:\s*([^\s]+)/g;
-        // TODO: find IPv6 RegEx
-        break;
-    case 'darwin':
-        command = 'ifconfig';
-        filterRE = /\binet\s+([^\s]+)/g;
-        // filterRE = /\binet6\s+([^\s]+)/g; // IPv6
-        break;
-    default:
-        command = 'ifconfig';
-        filterRE = /\binet\b[^:]+:\s*([^\s]+)/g;
-        // filterRE = /\binet6[^:]+:\s*([^\s]+)/g; // IPv6
-        break;
-    }
-
-    return function (callback, bypassCache) {
-        if (cached && !bypassCache) {
-            callback(null, cached);
-            return;
-        }
-        // system call
-        exec(command, function (error, stdout, sterr) {
-            cached = [];
-            var ip;
-            var matches = stdout.match(filterRE) || [];
-            //if (!error) {
-            for (var i = 0; i < matches.length; i++) {
-                ip = matches[i].replace(filterRE, '$1')
-                if (!ignoreRE.test(ip)) {
-                    cached.push(ip);
-                }
-            }
-            //}
-            callback(error, cached);
-        });
-    };
-})();
-
+var util       = require("util");
+var Step 	   = require("step");
+var facebook   = require('facebook-graph');
+var useragent  = require('express-useragent');
 
 var port = 8001;
 var server_ip = "210.122.0.164" + ":" + port;
-/*
-getNetworkIPs(function (error, ip) {
-    console.log(ip);
-    server_ip = ip[0]+":"+port;
-    if (error) {
-        console.log('error:', error);
-    }
-}, false);
-*/
+
 Array.prototype.remove = function(o){
 	this.splice(this.indexOf(o), 1);
 };
 
 DBTemplate = new DBTemplate();
-
-
 
 
 function initExpressEndSocketIO(){
@@ -127,8 +44,8 @@ function initExpressEndSocketIO(){
 	
 	
 	
-	app.get('/', function(req, res) {
-	    res.render('index.html', {});      
+	app.get('/', function(req, res) {  
+		res.render('index.html', {});      
 	});
 	app.post("/user/joinWithFacebook",function(req,res){
 		var params = req.body;
@@ -139,7 +56,6 @@ function initExpressEndSocketIO(){
 								  this);	
 			},
 			function(results){ 
-				console.log("fb ",results);
 				if(results && results.length > 0){ //이미 등록된것인 경우 클라이언트에 알려줌
 					res.render('text.ejs', {text : { result : "login" , 
 													 user   : results[0] }});     
@@ -196,9 +112,12 @@ function initExpressEndSocketIO(){
 				}
 			);
 		}
+		else {
+			res.render('text.ejs', {text : {error : "not validate user_idx"}});
+		}
 	});
-	//초대하기
 	
+	//초대하기
 	app.post("/paper/inviteWithFacebookID",function(req,res){
 		var user_idx  		 = req.body[ "user_idx"  ];
 		var paper_idx 	 	 = req.body[ "paper_idx" ];
@@ -213,7 +132,8 @@ function initExpressEndSocketIO(){
 				},
 				function(error,allResults){
 					var results = allResults[0];
-					if(error) console.log(error);
+					if(error) 
+						console.log(error);
 					var friend_id = results[0].guest_idx;
 					console.log(friend_fb_id," : ",friend_id);
 					if(friend_id){
@@ -227,11 +147,11 @@ function initExpressEndSocketIO(){
 						console.log("not joined user");
 						//앱을 사용하는 유저가 아닌경우, 
 						//초대한 사람의 정보를 조회하여 액세스 토큰을 얻는다
+						//또한, 초대하려고 하는 페이퍼의 정확한 정보를 얻는다.
 						Step(
 							function(){
 								console.log(user_idx);
-								DBTemplate.query("select * from USER where idx = ?; select * from ROLLING_PAPER where idx = ?"
-												 ,[user_idx,paper_idx],this);
+								DBTemplate.query("select * from USER where idx = ?; select * from ROLLING_PAPER where idx = ?",[user_idx,paper_idx],this);
 							},
 							function(error,results){
 								if(error) console.log(error);
@@ -280,11 +200,11 @@ function initExpressEndSocketIO(){
 			notice = "";
 		
 		if(title && 
-		  notice && 
-		  target_email && 
-		  receiver_fb_id && 
-		  receiver_name && 
-		  receive_time){
+		   notice && 
+		   target_email && 
+		   receiver_fb_id && 
+		   receiver_name && 
+		   receive_time){
 			 Step(
 			 	function(){
 					DBTemplate.query("call createRollingPaper(?,?,?,?,?,?,?)",
@@ -306,111 +226,75 @@ function initExpressEndSocketIO(){
 			
 		}
 	});
+
 	//웹에서 페이퍼를 볼때
 	app.get("/paper",function(req,res){
-		console.log(req.useragent);
-	
-		var paper_idx = req.param("v");
-		console.log(req.params);
-		if(paper_idx)
-		{
-			(function(){
-			var contentsResults = {};
+		var paper_idx = Number(req.param("v"));
+		if(paper_idx){
 			Step(
 				function(){
-					DBTemplate.query("select * from ROLLING_PAPER where idx = ?",[paper_idx],this);
+					DBTemplate.query("call getPaperForWebView(?)",[paper_idx],this);
 				},
 				function(error,results){
 					if(error) console.log(error);
-					if( results.length != 1 ){
-						res.render('text.ejs', {text : "not valid paper_idx"});
-					}
-					else
+					
+					if(results.length > 1 &&
+					   results[0] && results[0][0] &&
+					   results[0][0].error){
+					   res.render('text.ejs', {text : { "error" : results[0][0].error}});
+					}	
+					else 
 					{
-						contentsResults = results[0];
-						DBTemplate.query("select u.* from ROLLING_PAPER_TICKET t,USER u where t.paper_idx = ? and t.user_idx = u.idx group by u.idx",[paper_idx],this);
-					}					
-				},
-				function(error,results){				
-					if(error) console.log(error);
-					contentsResults["participants"] = results;
-					DBTemplate.query("select * from IMAGE_CONTENT where paper_idx = ?",[paper_idx],this);
-				},
-				function(error,imageResults){
-					if(error) console.log(error);
-					console.log("image results ",imageResults);
-					contentsResults["image"] = imageResults;
-					DBTemplate.query("select * from TEXT_CONTENT  where paper_idx = ?",[paper_idx],this);
-				},
-				function(error,results){
-					if(error) console.log(error);
-					contentsResults["text"] = results;
-					
-					console.log("text results ",results);
-					DBTemplate.query("select * from SOUND_CONTENT  where paper_idx = ?",[paper_idx],this);
-				},
-				function(error,results){
-					if(error) console.log(error);
-					contentsResults["sound"] = results;
-					console.log("sound results ",results);
-					
-					console.log(contentsResults);
-					
-					var viewName = req.useragent.isMobile ? "mobilepaper.ejs" : 'paper.ejs';
-					
+						var paper = results[0][0];
+						paper["participants"] = results[1];
+						paper["contents"] = {
+							image : results[2],
+							text  : results[3],
+							sound : results[4]
+						};
+						
+						var viewName = req.useragent.isMobile ? "paper-mobile.ejs" : 'paper.ejs';
 						res.render(viewName, {
 							server_ip : server_ip,
-							paper : contentsResults
+							paper     : paper
 						});
+					}
 				}
 			);
-			})();
 		}
 		else{
 			res.render('text.ejs', {text : "not valid paper id" + paper_idx});
 		}
 	});
+	
 	//앱에서 페이퍼를 볼때
 	app.post("/paper/contents",function(req,res){
 		console.log("/paper/contents");
-		var paper_idx = req.body['paper_idx'];
-		var after_time  = req.body['after_time'];
+		var paper_idx  = req.body['paper_idx'];
+		var after_time = req.body['after_time'];
 		if(paper_idx){
 			var contentsResults = {};
-			Step(
-				function(){
-					DBTemplate.query("select * from IMAGE_CONTENT where paper_idx = ? and modify_time > ?",[paper_idx,after_time],this);
-				},
-				function(error,results){
-					if(error) console.log(error);
-					contentsResults["image"] = results;
-					DBTemplate.query("select * from TEXT_CONTENT  where paper_idx = ? and modify_time > ?",[paper_idx,after_time],this);
-				},
-				function(error,results){
-					if(error) console.log(error);
-					contentsResults["text"] = results;
-					DBTemplate.query("select * from SOUND_CONTENT  where paper_idx = ? and modify_time > ?",[paper_idx,after_time],this);
-				},
-				function(error,results){
-					if(error) console.log(error);
-					contentsResults["sound"] = results;
-					
-					res.render('text.ejs', {text : contentsResults});
-					console.log(paper_idx," ",after_time," ",contentsResults);
-				}
-			);
+			Step(function(){
+				DBTemplate.query("call getAllContentsOfPaperAfterTime(?,?)",[paper_idx,after_time],this);
+			},function(error,results){
+				contentsResults["image"] = results[0];
+				contentsResults["text"]  = results[1];
+				contentsResults["sound"] = results[2];
+				res.render('text.ejs', {text : contentsResults});
+			});
 		}
 		else {
 			res.render('text.ejs', {text : {error : "not validate paper_idx"}});
 		}
 	});
+	
+	
 	app.post("/paper/addContent/sound",function(req,res){
 		console.log("IMAGE_UPLOAD");
-		var paper_idx = req.body["paper_idx"];
-        var user_idx  = req.body["user_idx"];
-       	var x 	   	  = req.body['x'];
-		var y 		  = req.body['y'];
-		console.log(req.body);
+		var paper_idx = Number(req.body["paper_idx"]);
+        var user_idx  = Number(req.body["user_idx"]);
+       	var x 	   	  = Number(req.body['x']);
+		var y 		  = Number(req.body['y']);
 		if(user_idx && paper_idx)
 		{
 			console.log('-> ' +  util.inspect(req.files));
@@ -426,9 +310,7 @@ function initExpressEndSocketIO(){
 			    var target_path = util.format("%s/resources/uploads/%s",
 			    							  __dirname,new_file_name);
 			    Step(
-			    	function(){
-				    	fs.rename(tmp_path, target_path, this);
-					},
+			    	function(){ fs.rename(tmp_path, target_path, this); },
 					function(err){
 						if(err) throw err;
 						DBTemplate.query("call insertSoundContent(?,?,?,?,?)",
@@ -448,16 +330,16 @@ function initExpressEndSocketIO(){
 			});
 		}
 	});
+	
+	
 	app.post("/paper/addContent/image",function(req,res){
-		console.log("IMAGE_UPLOAD");
-		var paper_idx = req.body["paper_idx"];
-        var user_idx  = req.body["user_idx"];
-        var rotation  = req.body['rotation'];
-        var width     = req.body["width"];
-        var height    = req.body["height"];
-       	var x 	   	  = req.body['x'];
-		var y 		  = req.body['y'];
-		console.log(req.body);
+		var paper_idx = Number(req.body["paper_idx"]);
+        var user_idx  = Number(req.body["user_idx"]);
+        var rotation  = Number(req.body['rotation']);
+        var width     = Number(req.body["width"]);
+        var height    = Number(req.body["height"]);
+       	var x 	   	  = Number(req.body['x']);
+		var y 		  = Number(req.body['y']);
 		if(user_idx && paper_idx)
 		{
 			console.log('-> ' +  util.inspect(req.files));
@@ -477,7 +359,8 @@ function initExpressEndSocketIO(){
 					function(err){
 						if(err) throw err;
 						DBTemplate.query("call insertImageContent(?,?,?,?,?,?,?,?)",
-										[paper_idx,user_idx,x,y,width,height,rotation, util.format("http://localhost/uploads/%s",new_file_name)],
+										[paper_idx,user_idx,x,y,width,height,rotation, 
+										util.format("http://localhost/uploads/%s",new_file_name)],
 										this);
 					},
 					function(error,results){ 
@@ -495,7 +378,6 @@ function initExpressEndSocketIO(){
 	});
 
 	app = http.createServer(app).listen(port);
-	io = socketIO.listen(app);
 }
 initExpressEndSocketIO();
 

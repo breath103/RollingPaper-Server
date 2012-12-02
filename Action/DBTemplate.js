@@ -6,9 +6,10 @@ var Step     = require("step");
 function DBTemplate(){
 	var outerThis = this;
 	this.client = mysql.createConnection({
-		host : "dasan.skku.edu",
-	    user : "inmunskku",
-	    password : "1278",
+		host : "127.0.0.1",
+	    user : "root",
+	    password : "1234",
+	    insecureAuth: true,
 	    multipleStatements : true
 	});
 	
@@ -26,7 +27,7 @@ connection.end();
 	
 	Step(
 		function(){
-			outerThis.client.query('USE inmunskku', this);
+			outerThis.client.query('USE RollingPaper', this);
 		},
 		function(error, results){
 			if(error) {
@@ -34,7 +35,7 @@ connection.end();
 				return;
 			}
 			console.log("database Connected");
-			console.log(outerThis.client);
+		//	console.log(outerThis.client);
 		}
 	);	
 }

@@ -207,7 +207,7 @@ a:active {
 	width: 70%;
 	height: 0%;
 	background-color: #0f4e3a;
-	line-height: 40px;
+	line-height: 12px;
 }
 
 ::-webkit-scrollbar {
@@ -294,30 +294,30 @@ a:active {
 	<div class="Container" style="margin: auto;">
 		<div class="Left">
 			<div class="Logo" style="margin: 15% auto auto 8%;"></div>
-			<!-- 로고 이미지란  -->
+			<!-- 濡쒓퀬 �대�吏��  -->
 			<div class="Logo_Name" style="margin: auto auto auto 5%;">Rolling
 				Paper</div>
-			<!-- 로고이름란 -->
+			<!-- 濡쒓퀬�대쫫��-->
 			<div class="Logo_down_shadow" style="margin: 10% auto auto 15%;"></div>
-			<!-- logo : 로고 선(border)과 그림자효과 (gradient) -->
+			<!-- logo : 濡쒓퀬 ��border)怨�洹몃┝�먰슚怨�(gradient) -->
 			<div class="From_down_shadow" style="margin: 9% auto auto 15%"></div>
-			<!-- from : 로고 선(border)과 그림자효과 (gradient) -->
+			<!-- from : 濡쒓퀬 ��border)怨�洹몃┝�먰슚怨�(gradient) -->
 			<div class="Place_To" style="margin: 24% auto auto 12%;">
 				<font face=arial>&nbsp;To. </font> 
 					<a href="https://www.facebook.com/<%-paper.receiver_fb_id%>" target=_blank><font face=arial><%-paper.receiver_name%></font></a>
 			</div>
-			<!-- To. 받는사람이름 -->
+			<!-- To. 諛쏅뒗�щ엺�대쫫 -->
 			<div class="Place_Holder" style="margin: 5% auto 20% 13%;">
 			</div>
-			<!-- 받는 Title -->
+			<!-- 諛쏅뒗 Title -->
 			<div class="Place_Mark"></div>
-			<!-- 큰따옴표 -->
+			<!-- �곕뵲�댄몴 -->
 			<div class="Place_Participate_Text"><%-paper.title%></div>
-			<!-- 메세지 title적는 란 -->
+			<!-- 硫붿꽭吏�title�곷뒗 ��-->
 			<div class="Place_From" style="margin: -5% auto 1% 12%;">
 				<font face=arial>&nbsp;From.</font>
 			</div>
-			<!-- From. 보낸사람이름 -->
+			<!-- From. 蹂대궦�щ엺�대쫫 -->
 			<div class="Participate" style="margin: 3% auto 20% 16%;">
 				<% paper.participants.forEach(function printBr(e, i, array) { %>
 				<div class="Participate_List"
@@ -330,7 +330,7 @@ a:active {
 							width=100% height=100%></a>
 					</div>
 					<div class="Part_Name"
-						style="margin: auto auto auto auto;">
+						style="margin: 10% auto auto auto;">
 						<a href="https://www.facebook.com/<%-e.facebook_id%>"
 							target=_blank><%-e.name%></a>
 					</div>
@@ -338,23 +338,23 @@ a:active {
 				<!-- Participate List -->
 				<%});%>
 			</div>
-			<!-- 보내는 사람들 명단 -->
+			<!-- 蹂대궡���щ엺��紐낅떒 -->
 		</div>
-		<!-- 왼쪽칸 -->
+		<!-- �쇱そ移�-->
 		<div class="Right">
 
 			<div class="Right_Center">
 				
 				<div class="Mo_Left" style="display:inline-block"></div>
-				<!-- 왼쪽 마우스 오버 -->
+				<!-- �쇱そ 留덉슦���ㅻ쾭 -->
 				
 				<div class="Place_Holder2" style="position:relative;float:left;display:inline-block">
-					<%if(paper.image){
-					paper.image.forEach(function(e,i) {
+					<%if(paper.contents.image){
+					paper.contents.image.forEach(function(e,i) {
 					var heightratio = e.height / originalScreenSize;
 					var y_ratio = e.y / originalScreenSize;
 					var size_ratio = e.height/e.width;
-					var position_ratio = e.y/e.x; //우선 오리지널 화면 사이즈에 대한 컨텐츠의 높이 비를 계산한다
+					var position_ratio = e.y/e.x; //�곗꽑 �ㅻ━吏�꼸 �붾㈃ �ъ씠利덉뿉 ��븳 而⑦뀗痢좎쓽 �믪씠 鍮꾨� 怨꾩궛�쒕떎
 					%>
 					<div class ="image_content retain_size_ratio_base_height" 
 						position_ratio = "<%-position_ratio%>"
@@ -364,15 +364,15 @@ a:active {
 					</div>
 					<%});
 				}%>
-				<%if(paper.sound){
-					paper.sound.forEach(function(e,i) {
+				<%if(paper.contents.sound){
+					paper.contents.sound.forEach(function(e,i) {
 					e.height = 50;
 					e.width  = 50;
 					e.rotation = 0;
 					var heightratio = e.height / originalScreenSize;
 					var y_ratio = e.y / originalScreenSize;
 					var size_ratio = e.height/e.width;
-					var position_ratio = e.y/e.x; //우선 오리지널 화면 사이즈에 대한 컨텐츠의 높이 비를 계산한다
+					var position_ratio = e.y/e.x; //�곗꽑 �ㅻ━吏�꼸 �붾㈃ �ъ씠利덉뿉 ��븳 而⑦뀗痢좎쓽 �믪씠 鍮꾨� 怨꾩궛�쒕떎
 					%>
 					<div class ="sound_content retain_size_ratio_base_height" 
 						position_ratio = "<%-position_ratio%>"
@@ -389,20 +389,20 @@ a:active {
 				
 				</div>
 				<div class="Mo_Right" style="display:inline-block"></div>
-				<!-- 오른쪽 마우스 오버 -->
-				<!-- center칸 맞추기 보조 -->
+				<!-- �ㅻⅨ履�留덉슦���ㅻ쾭 -->
+				<!-- center移�留욎텛湲�蹂댁“ -->
 				<div class="Place_Date"></div>
-				<!-- 날짜칸 칸 보조 -->
+				<!-- �좎쭨移�移�蹂댁“ -->
 				<div class="Date">
 					<font color=#728560>&nbsp;<%-paper.created_time%></font>
 				</div>
-				<!-- 날짜 -->
+				<!-- �좎쭨 -->
 			</div>
-			<!-- 오른쪽 가운데 칸 -->
+			<!-- �ㅻⅨ履�媛�슫��移�-->
 		</div>
-		<!-- 오른쪽 메인 칸 -->
+		<!-- �ㅻⅨ履�硫붿씤 移�-->
 	</div>
-	<!-- 전체 container칸 -->
+	<!-- �꾩껜 container移�-->
 
 </body>
 </html>

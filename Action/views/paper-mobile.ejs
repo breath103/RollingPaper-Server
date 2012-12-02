@@ -1,0 +1,347 @@
+<%
+function toDegree(radian){	
+return radian / (Math.PI * 2 ) * 360;
+}
+var originalScreenSize = 400;
+%>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+<script> 
+var rollingpaper = <%-JSON.stringify(paper)%>
+
+$(document).ready(function(){
+onBodyResize();
+$(".sound_content").click(function(){
+var audio = $( $(this).find("audio")[0] );
+console.log(audio);
+audio[0].play();
+});
+});
+function onBodyResize(){
+$(".retain_size_ratio_base_height").each(function(i,e){
+var $e = $(e);
+var size_ratio = Number($(this).attr("size_ratio"));
+var width = $(this).height() / size_ratio;
+$(this).width(width);
+var pos_ratio = Number($(this).attr("position_ratio"));
+var left = $(this).position().top / pos_ratio;
+$(this).css("left",left);
+});
+}
+</script>
+<!-- Apple 홈화면 추가 -->
+<link rel="apple-touch-icon" href="/customIcon.png" />
+<style>
+html, body {
+padding: 0px;
+margin: 0px;
+border: 0px;
+width: 100%;
+height: 100%;
+font-size: 1em;
+overflow: hidden;
+}
+.image_content{
+border-radius:10px 10px 10px 10px;
+}
+.image_content img{
+border-radius:30px 30px 30px 30px;
+box-shadow: 10px 10px 10px gray;
+}
+a:link {
+color: #9a9e72;
+text-decoration: none;
+}/* unvisited link */
+a:visited {
+color: #9a9e72;
+}/* visited link */
+a:hover {
+color: #BDB76B;
+}/* mouse over link */
+a:active {
+color: #0f4e3a;
+}/* selected link */
+</style>
+
+<style>
+
+.site_container {
+width: 100%;
+height: 100%;
+overflow: hidden;
+}
+
+.tab_container {
+display: inline-block;
+width: 25%;
+height: 100%;
+background: #0f4e3a;
+}
+.content_container {
+display: inline-block;
+position: absolute;
+left: 0%;
+top: 0%;
+width: 100%;
+height: 100%;
+background-color: white;
+}
+.Logo {
+width: 100%;
+padding-top: 0.5em;
+padding-bottom: 0em;
+background-color: transparent;
+}
+.Logo_down_shadow {
+width: 73%;
+
+
+padding-top: 0.3em;
+padding-bottom: 0.3em;
+
+border: 1px;solid #a6a577;
+border-bottom-style: none;
+border-left-style: none;
+border-right-style: none;
+background-image: url("https://www.facebook.com/download/379048475519203/web_%EA%B7%B8%EB%A6%BC%EC%9E%90.png");
+background-size: 100% 100%;
+}
+.To {
+width: 100%;
+padding-top: 0.1em;
+padding-bottom: 0.1em;
+padding-left: 0.3em;
+background-color: transparent;
+color: #CCBB86;
+}
+
+.Title {
+width: 73%;
+
+padding-left: 0.2em;
+padding-right: 0.2em;
+padding-top: 0.5em;
+padding-bottom: 0.5em;
+
+background-color: #0c3b2d;
+
+border: #F64E02 dashed 1px;
+border-radius: 4px;
+
+color: #ccbb86;
+
+margin-top: 0.8em;
+margin-bottom: 0.8em;
+
+background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),to(#0c3b2c) );
+text-align: center;
+}
+
+.Place_Participate_Text {
+position: absolute;
+width: 50%;
+height: 12%;
+top: 46%;
+left: 25%;
+color: #ccbb86;
+text-align: center;
+font-weight: bold;
+}
+.Name {
+width: 100%;
+padding-left: 0.3em;
+padding-top: 0.1em;
+padding-bottom: 0.1em;
+background-color: transparent;
+color: #CCBB86;
+
+}
+
+.From {
+width: 100%;
+height: 3%;
+padding-top: 0.1em;
+padding-bottom: 0.1em;
+padding-left: 0.3em;
+background-color: transparent;
+color: #CCBB86;
+margin-bottom: 0.5em;
+}
+.Participate {
+width: 100%;
+height: 50%;
+padding-left: 0.3em;
+padding-right:0.3em;
+background-color: transparent;
+margin-bottom: 5em;
+overflow: scroll;
+overflow-x: hidden;
+}
+
+.Part_Image {
+float: left;
+width: 1.5em;
+height: 1.5em;
+margin-bottom: 0.5em;
+background-color: #1a533e;
+}
+.Part_Name {
+float: right;
+width: 3em;
+height: 1.5em;
+margin-bottom: 0.5em;
+background-color: #0f4e3a;
+}
+::-webkit-scrollbar {
+width: 8px;
+height: 8px;
+}
+::-webkit-scrollbar-button {
+display: none;
+}
+::-webkit-scrollbar-track {
+background: #1a533e;
+}
+::-webkit-scrollbar-thumb {
+width: 8px;
+height: 8px;
+background: #738762;
+}
+h5 {
+display: block;
+font-size: 0.67em;
+-webkit-margin-before: 0em;
+-webkit-margin-after: 0em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+font-weight: bold;
+}
+
+</style>
+<!-- mobile tap bar 전환 jquery -->
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+<!--Tap바 전환 script -->
+<script>
+var contentToggle = false;
+function toggleContentView() {
+var slideFactor = 25;
+if (!contentToggle)
+$(".content_container").clearQueue().transit({
+"left" : "0%",
+"width" : "100%"
+});
+else
+$(".content_container").clearQueue().transit({
+"left" : slideFactor + "%",
+"width" : (100 - slideFactor) + "%"
+});
+contentToggle = !contentToggle;
+}
+</script>
+<title>Rolling Paper</title>
+</head>
+<body onresize="onBodyResize();">
+<!-- 전체 container칸 -->
+<div class="site_container">
+<!-- 왼족 Tab container칸-->
+<div class="tab_container">
+<div class="Logo", style="
+text-align:center">
+<img src="http://www.facebook.com/download/226925660773162/MobileLogo.png", width=80%>
+</div>
+<!-- 로고 밑 shadow 그림자-->
+<div class="Logo_down_shadow" style="margin: 10% auto auto 15%;"></div>
+
+<!-- <To.> text-->
+<div class="To">
+<h5>To.</h5>
+</div>
+<!-- 이름 -->
+<div class="Name">
+<h5><a href="https://www.facebook.com/<%-paper.receiver_fb_id%>" target=_blank><%-paper.receiver_name%></a></h5>
+</div>
+
+<!-- 편지 타이틀 -->
+<div class="Title" style="
+margin-left:auto;
+margin-right:auto;
+">
+<h5><%-paper.title%></h5>
+</div>
+<!-- 받는 사람 <From.> -->
+<div class="From">
+<h5>From.</h5>
+</div>
+
+
+<!-- 받는 사람 리스트 -->
+
+<div class="Participate" style="margin: 0.1em, 0.1em, 0.1em, 0.1em">
+<% paper.participants.forEach(function printBr(e, i, array) { %>
+
+<div class="Part_Image" id="name1">
+<a href="https://www.facebook.com/<%-e.facebook_id%>"
+target=_blank><img alt="name1"
+src="<%-e.picture%>"
+width=100%></a>
+</div>
+
+<div class="Part_Name" id="name1">
+<a href="https://www.facebook.com/<%-e.facebook_id%>"
+target=_blank><h5><%-e.name%></h5></a>
+</div>
+
+<!-- Participate List -->
+<%});%>	
+</div>
+</div>
+<div class="Content_container" style="left: 25%;overflow:hidden;">
+<%if(paper.image){
+paper.image.forEach(function(e,i) {
+var heightratio = e.height / originalScreenSize;
+var y_ratio = e.y / originalScreenSize;
+var size_ratio = e.height/e.width;
+var position_ratio = e.y/e.x; //우선 오리지널 화면 사이즈에 대한 컨텐츠의 높이 비를 계산한다
+%>
+<div class ="image_content retain_size_ratio_base_height" 
+position_ratio = "<%-position_ratio%>"
+size_ratio ="<%-size_ratio%>"
+style ="width:<%-e.width%>px;height:<%-heightratio*100%>%;position:absolute;left:<%-e.x%>px;top:<%-y_ratio*100%>%;-webkit-transform:rotate(<%-toDegree(e.rotation)%>deg);">
+<img style="width:100%;height:100%;" src="<%-e.image.replace('localhost',server_ip)%>"/>
+</div>
+<%});
+}%>
+<%if(paper.sound){
+paper.sound.forEach(function(e,i) {
+e.height = 50;
+e.width = 50;
+e.rotation = 0;
+var heightratio = e.height / originalScreenSize;
+var y_ratio = e.y / originalScreenSize;
+var size_ratio = e.height/e.width;
+var position_ratio = e.y/e.x; //우선 오리지널 화면 사이즈에 대한 컨텐츠의 높이 비를 계산한다
+%>
+<div class ="sound_content retain_size_ratio_base_height" 
+position_ratio = "<%-position_ratio%>"
+size_ratio ="<%-size_ratio%>"
+style ="width:<%-e.width%>px;height:<%-heightratio*100%>%;position:absolute;left:<%-e.x%>px;top:<%-y_ratio*100%>%;-webkit-transform:rotate(<%-toDegree(e.rotation)%>deg);">
+<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+<audio style="display:none">
+<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
+Your browser does not support the audio element.
+</audio>
+</div>
+<%});
+}%>
+<button onclick="toggleContentView();">
+전환
+</button>
+</div>
+</div>
+</body>
+</html>
