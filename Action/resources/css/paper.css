@@ -1,0 +1,247 @@
+html,body {
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+	overflow: hidden;
+	width:100%;
+	height:100%;
+}
+
+.image_content{
+	border-radius:5% 5% 5% 5%;
+	position: absolute;
+}
+.image_content img{
+	width:100%;
+	height:100%;
+	border-radius:5% 5% 5% 5%;
+}
+a:link {
+	color: #9a9e72;
+	text-decoration: none;
+} /* unvisited link */
+a:visited {
+	color: #9a9e72;
+} /* visited link */
+a:hover {
+	color: #BDB76B;
+} /* mouse over link */
+a:active {
+	color: #0f4e3a;
+} /* selected link */
+.Container {
+	position: static;
+	width: 1440px;
+	height: 960px;
+	width:100%;
+	height:100%;
+}
+
+.Left {
+	float: left;
+	position: relative;
+	width: 13%;
+	height: 100%;
+	background-color: #0f4e3a;
+	box-shadow: 0 0 29px 8px #888888;
+	left: 0px;
+	right: 0px;
+	z-index: 1;
+}
+
+.Logo {
+	width: 80%;
+	height: 17%;
+	background-image: url("/images/Rolling_Paper_Logo.png");
+	background-size: 80% 80%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.Logo_Name {
+	width: 90%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	text-align: center;
+	text-shadow: 1px 1px 1px #888888;
+}
+
+.Logo_down_shadow {
+	width: 73%;
+	height: 3%;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	background-image: url("/images/web_shadow.png");
+	background-size: 100% 100%;
+}
+
+.From_down_shadow {
+	position: absolute;
+	width: 73%;
+	height: 3%;
+	top: 83%;
+	left: 0px;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	background-image: url("/images/web_shadow.png");
+	background-size: 100% 100%;
+	-webkit-transform: rotate(180deg);
+}
+
+.Place_To {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Place_Holder {
+	width: 73%;
+	height: 19%;
+	background-color: #0c3b2d;
+	border: #f64e02 dashed 2px;
+	border-radius: 4px;
+	color: #ccbb86;
+	font-size: 150%;
+	font-weight: bold;
+	color: #ccbb86;
+	background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),
+		to(#0c3b2c) );
+	text-align: center;
+}
+
+.Place_Mark {
+	position: absolute;
+	width: 66%;
+	height: 2%;
+	background-image: url("/images/web_apostrophe.png");
+	background-size: 100% 100%;
+	top: 44%;
+	left: 17%;
+}
+
+.Place_Participate_Text {
+	position: absolute;
+	width: 50%;
+	height: 12%;
+	top: 46%;
+	left: 25%;
+	color: #ccbb86;
+	text-align: center;
+	font-weight: bold;
+}
+
+.Place_From {
+	width: 85%;
+	height: 3%;
+	background-color: #0f4e3a;
+	color: #ccbb86;
+	font-size: 100%;
+}
+
+.Participate {
+	width: 72%;
+	height: 27%;
+	background-color: #0f4e3a;
+	color: #9a9e72;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.Participate_List {
+	width: 100%;
+	height: 20%;
+}
+
+.Part_Image {
+	float: left;
+	width: 26%;
+	height: 100%;
+	background-color: #1a533e;
+}
+
+.Part_Name {
+	float: right;
+	width: 70%;
+	height: 0%;
+	background-color: #0f4e3a;
+	line-height: 12px;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+
+::-webkit-scrollbar-track {
+	background: #1a533e;
+}
+
+::-webkit-scrollbar-thumb {
+	width: 8px;
+	height: 8px;
+	background: #738762;
+}
+
+.Right {
+	float: right;
+	width: 87%;
+	height: 100%;
+	display: inline;
+	overflow: scroll;
+	overflow-y: hidden;
+}
+
+.Right_Center {
+	float: right;
+	width: 100%;
+	height: 100%;
+	background-image: url("/images/web_paper.png");
+	position: relative;
+}
+
+.Place_Holder2 {
+	width: 100%;
+	height: 90%;
+}
+
+.Date {
+	width: 13%;
+	height: 10%;
+	background-color: #ccbb86;
+	float: right;
+	line-height: 200%;
+	font-weight: bold;
+	box-shadow: 3px 1px 7px #888888;
+}
+
+.Place_Date {
+	width: 5%;
+	height: 10%;
+	float: right;
+}
+
+.Mo_Left {
+	float: left;
+	width: 5%;
+	height: 100%;
+}
+.Place_Holder2{
+	width:90%;
+}
+
+.Mo_Right {
+	float: right;
+	width: 5%;
+	height: 100%;
+}

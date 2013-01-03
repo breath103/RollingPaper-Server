@@ -3,7 +3,7 @@ var mysql 	 = require('mysql');
 var util 	 = require('util');
 var Step     = require("step");
 
-function DBTemplate(){
+function DBTemplate(fConnected){
 	var outerThis = this;
 	this.client = mysql.createConnection({
 		host : "127.0.0.1",
@@ -13,18 +13,11 @@ function DBTemplate(){
 	    multipleStatements : true
 	});
 	
+	this.tableDescriptions = {};
+
+	
+	
 	this.client.connect();
-/*
-connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
-  if (err) throw err;
-
-  console.log('The solution is: ', rows[0].solution);
-});
-
-connection.end();
-*/	
-	
-	
 	Step(
 		function(){
 			outerThis.client.query('USE RollingPaper', this);
@@ -35,7 +28,8 @@ connection.end();
 				return;
 			}
 			console.log("database Connected");
-		//	console.log(outerThis.client);
+			if(fConnected)
+				fConnected();
 		}
 	);	
 }
@@ -96,5 +90,13 @@ DBTemplate.prototype.insert = function(tableName,data,callback){
 		callback
 	);
 };
+DBTemplate.prototype.addTableDesc = function(name,desc){
+	this.tableDescriptions[name] = desc;
+}
+DBTemplate.prototype.getTableDesc = function(name){
+	return tableDescriptions[name];
+}
+
+
 
 module.exports = DBTemplate;

@@ -43,7 +43,6 @@ function initExpressEndSocketIO(){
 	});
 	
 	
-	
 	app.get('/', function(req, res) {  
 		res.render('index.html', {});      
 	});
@@ -116,6 +115,22 @@ function initExpressEndSocketIO(){
 			res.render('text.ejs', {text : {error : "not validate user_idx"}});
 		}
 	});
+	
+	
+	function generatePhoneAuthCode() { 
+		return "" + Math.floor(Math.random() * 100000);
+	}
+	
+	
+	app.post("/user/phoneAuth",function(req,res){
+		console.log("/user/phoneAuth");
+		var phone  = req.body['phone'];
+		if(phone){
+			var authcode = generatePhoneAuthCode();
+			res.render('text.ejs', {authCode : authcode});	
+		}
+	});
+	
 	
 	//초대하기
 	app.post("/paper/inviteWithFacebookID",function(req,res){
@@ -227,6 +242,17 @@ function initExpressEndSocketIO(){
 		}
 	});
 
+	
+	app.post("/ondeleteapp",function(req,res){
+		console.log("DEAUTH!!!!!");
+	//	console.log(req);
+		console.log(req.params);
+		res.render("text.ejs", {
+			text : {a:"!!!!"}
+		});
+						
+	});
+
 	//웹에서 페이퍼를 볼때
 	app.get("/paper",function(req,res){
 		var paper_idx = Number(req.param("v"));
@@ -252,12 +278,13 @@ function initExpressEndSocketIO(){
 							text  : results[3],
 							sound : results[4]
 						};
-						
 						var viewName = req.useragent.isMobile ? "paper-mobile.ejs" : 'paper.ejs';
+						/* 페이스북 인증을 해야지만 페이지를 볼 수 있도록 인증페이지로 넘겨버리는 부분 */ 
 						res.render(viewName, {
 							server_ip : server_ip,
 							paper     : paper
 						});
+						
 					}
 				}
 			);
@@ -266,6 +293,30 @@ function initExpressEndSocketIO(){
 			res.render('text.ejs', {text : "not valid paper id" + paper_idx});
 		}
 	});
+	
+	//앱에서 페이퍼를 볼때
+	app.post("/paper/contents",function(req,res){
+		console.log("/paper/contents");
+		var paper_idx  = req.body['paper_idx'];
+		var after_time = req.body['after_time'];
+		if(paper_idx){
+			var contentsResults = {};
+			Step(function(){
+				DBTemplate.query("call getAllContentsOfPaperAfterTime(?,?)",[paper_idx,after_time],this);
+			},function(error,results){
+				contentsResults["image"] = results[0];
+				contentsResults["text"]  = results[1];
+				contentsResults["sound"] = results[2];
+				res.render('text.ejs', {text : contentsResults});
+			});
+		}
+		else {
+			res.render('text.ejs', {text : {error : "not validate paper_idx"}});
+		}
+	});
+	
+	
+	
 	
 	//앱에서 페이퍼를 볼때
 	app.post("/paper/contents",function(req,res){
@@ -330,8 +381,6 @@ function initExpressEndSocketIO(){
 			});
 		}
 	});
-	
-	
 	app.post("/paper/addContent/image",function(req,res){
 		var paper_idx = Number(req.body["paper_idx"]);
         var user_idx  = Number(req.body["user_idx"]);
@@ -344,7 +393,6 @@ function initExpressEndSocketIO(){
 		{
 			console.log('-> ' +  util.inspect(req.files));
 		    var image = req.files.image;
-		   
 		    if(image.type.indexOf('image') > -1)
 		    {
 		    	var imageType = image.type.split("/")[1];
@@ -376,7 +424,105 @@ function initExpressEndSocketIO(){
 			});
 		}
 	});
-
+	app.post("/paper/editContent/image",function(req,res){
+		var image_idx = Number(req.body["idx"]);
+		var rotation  = Number(req.body['rotation']);
+        var width     = Number(req.body["width"]);
+        var height    = Number(req.body["height"]);
+       	var x 	   	  = Number(req.body['x']);
+		var y 		  = Number(req.body['y']);
+		var image     = req.body['image'];
+		
+		console.log("!!->",req.body);
+		if(!image_idx){
+			res.render('text.ejs', { 
+			 	text : util.format("invalid image_idx : %d",image_idx)
+			});
+			return;
+		}
+		
+		Step(
+			function(){
+				console.log(image);
+				DBTemplate.query("call editImageContent(?,?,?,?,?,?,?)",[image_idx,x,y,width,height,rotation,image],this)
+			},
+			function(error,results) {
+				if(error){
+					console.log(error);
+					res.render('text.ejs', {text : {error : "DB Fetch Fail"}});
+				}
+				else{
+					res.render('text.ejs', {text : {success : null}});
+				}
+			}
+		);
+	});
+	app.post("/paper/editContent/sound",function(req,res){
+		var sound_idx = Number(req.body["idx"]);
+		var rotation  = Number(req.body['rotation']);
+        var width     = Number(req.body["width"]);
+        var height    = Number(req.body["height"]);
+       	var x 	   	  = Number(req.body['x']);
+		var y 		  = Number(req.body['y']);
+		var sound     = req.body['sound'];
+		
+		console.log("!!->",req.body);
+		if(!sound_idx){
+			res.render('text.ejs', { 
+			 	text : util.format("invalid sound_idx : %d",sound_idx)
+			});
+			return;
+		}
+		
+		Step(
+			function(){
+				console.log(sound);
+				DBTemplate.query("call editSoundContent(?,?,?,?,?,?,?)",[sound_idx,x,y,width,height,rotation,sound],this)
+			},
+			function(error,results) {
+				if(error){
+					console.log(error);
+					res.render('text.ejs', {text : {error : "DB Fetch Fail"}});
+				}
+				else{
+					res.render('text.ejs', {text : {success : null}});
+				}
+			}
+		);
+	});
+	
+	app.post("/paper/deleteContent/image",function(req,res) {
+		var user_idx = Number(req.body["user_idx"]);
+		var image_idx = Number(req.body["image_idx"]);
+		
+		if(user_idx && image_idx){
+			Step(
+				function(){
+					DBTemplate.query("call deleteImageContent(?)",[image_idx],this);
+				},
+				function(error,results) {
+				
+				}
+			);
+		}
+	});
+	app.post("/paper/deleteContent/sound",function(req,res) {
+		var user_idx = Number(req.body["user_idx"]);
+		var sound_idx = Number(req.body["sound_idx"]);
+		
+		if(user_idx && sound_idx){
+			Step(
+				function(){
+					DBTemplate.query("call deleteSoundContent(?)",[sound_idx],this);
+				},
+				function(error,results) {
+				
+				}
+			);
+		}
+	});
+	
+	
 	app = http.createServer(app).listen(port);
 }
 initExpressEndSocketIO();

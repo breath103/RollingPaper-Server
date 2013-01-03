@@ -28,8 +28,8 @@ function initExpressEndSocketIO(){
 	app.configure('development', function() {
 	    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 	});
-	app.get('/', function(req, res) {
-	    res.render('index.html', {});      
+	app.get('/paint', function(req, res) {
+	    res.render('paintIndex.html', {});      
 	});
 	app.get('/test', function(req, res) {
 	    res.render('map.ejs', {});      
@@ -40,7 +40,7 @@ function initExpressEndSocketIO(){
 	app.get('/game/client.html', function(req, res) {
 	    res.render('client.html', {});      
 	});
-	app = http.createServer(app).listen(8001);
+	app = http.createServer(app).listen(80);
 	io = socketIO.listen(app);
 }
 initExpressEndSocketIO();
@@ -83,7 +83,6 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on("paintStart",function(data){
     	data.id = socket.id;
-    	
     	viewClients.forEach(function(client) {
 	    	client.write( JSON.stringify({type:"paintStart",data:data}) +"\r\n");
 	    })
@@ -92,6 +91,13 @@ io.sockets.on('connection', function (socket) {
     	viewClients.forEach(function(client) {
 	    	client.write( JSON.stringify({type:"paintEnd",data:{ id : socket.id }}) +"\r\n");
 	    })
+    });
+    socket.on("textMessage",function(data){
+    	console.log(data);
+		viewClients.forEach(function(client) {
+	    	client.write( JSON.stringify({type:"textMessage",data:{ id : socket.id , text : data } }) +"\r\n");
+	    });
+        
     });
     
     socket.on("shutdown",function(data){

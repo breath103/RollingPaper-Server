@@ -1,0 +1,234 @@
+html, body {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	width: 100%;
+	height: 100%;
+	font-size: 1em;
+	overflow: hidden;
+}
+
+a:link {
+	color: #9a9e72;
+	text-decoration: none;
+}/* unvisited link */
+a:visited {
+	color: #9a9e72;
+}/* visited link */
+a:hover {
+	color: #BDB76B;
+}/* mouse over link */
+a:active {
+	color: #0f4e3a;
+}/* selected link */
+
+		
+.site_container {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.tab_container {
+	display: inline-block;
+	width: 25%;
+	height: 100%;
+	background: #0f4e3a;
+}
+
+			
+.Logo {
+	width: 80%;
+	padding-top: 0.5em;
+	padding-bottom: 0em;
+	height: 15%;
+	background-image: url("images/Rolling_Paper_Logo.png");
+	background-size: 80% 80%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.Logo_Name {
+	width: 90%;
+	height: 3%;
+	background-color: transparent;
+	color: #ccbb86;
+	text-align: center;
+	text-shadow: 1px 1px 1px #888888;
+}
+
+.Logo_down_shadow {
+	width: 78%;
+	height: 3%;
+	padding-top: 0em;
+	padding-bottom: 0.3em;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	background-image: url("images/web_shadow.png");
+	background-size: 100% 100%;
+}
+
+.From_down_shadow {
+	position: absolute;
+	padding-top: 0em;
+	padding-bottom: 0.3em;
+	width: 20%;
+	height: 3%;
+	top: 88%;
+	left: 0px;
+	border: 1px solid #a6a577;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	background-image: url("images/web_shadow.png");
+	background-size: 100% 100%;
+	-webkit-transform: rotate(180deg);
+}
+
+.Place_To {
+	width: 80%;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	height: 3%;
+	background-color: transparent;
+	color: #ccbb86;
+}
+
+.Place_To_Name{
+    position: absolute;
+    width: 20%;
+    top: 29%;
+    left: 7%;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	padding-left: 0.2em;
+	height: 3%;
+	background-color: transparent;
+	color: #ccbb86;
+}
+
+.Place_Holder {
+	width: 73%;
+	height: 12%;
+	padding-left: 0em;
+	padding-right: 0.2em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	background-color: #0c3b2d;
+	border: #f64e02 dashed 1px;
+	border-radius: 4px;
+	margin-top: 0.8em;
+	margin-bottom: 0.8em;
+	font-weight: bold;
+	color: #ccbb86;
+	background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),
+		to(#0c3b2c) );
+	text-align: center;
+}
+
+.Place_Mark {
+	position: absolute;
+	width: 17%;
+	height: 1.5%;
+	background-image: url("/images/web_apostrophe.png");
+	background-size: 100% 100%;
+	top: 36%;
+	left: 4.5%;
+}
+
+.Place_Participate_Text {
+	position: absolute;
+	width: 15%;
+	height: 10%;
+	top: 37%;
+	left: 5%;
+	color: #ccbb86;
+	text-align: center;
+	font-weight: bold;
+}
+
+.Place_From {
+	width: 100%;
+	height: 3%;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	padding-left: 0.3em;
+	background-color: transparent;
+	color: #ccbb86;
+	margin-bottom: 0.5em;
+}
+
+.Participate {
+	width: 72%;
+	height: 36%;
+	padding-right:0.4em;
+	background-color: transparent;
+	margin-bottom: 5em;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.Participate_List {
+	width: 109%;
+	height: 22%;
+	background-color: transparent;
+}
+
+.Part_Image {
+	float: left;
+	width: 1em;
+	height: 1em;
+	margin-bottom: 0.1em;
+	background-color: transparent;
+}
+
+.Part_Name {
+	float: right;
+	width: 4em;
+	height: 1.5em;
+	margin-bottom: 0.3em;
+	background-color: transparent;
+	font-size: 40%;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+
+::-webkit-scrollbar-track {
+	background: #1a533e;
+}
+
+::-webkit-scrollbar-thumb {
+	width: 8px;
+	height: 8px;
+	background: #738762;
+}
+
+h5 {
+	display: block;
+	font-size: 0.1em;
+	-webkit-margin-before: 0em;
+	-webkit-margin-after: 0em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-weight: bold;
+}
+
+.content_container {
+	display: inline-block;
+	position: absolute;
+	left: 0%;
+	top: 0%;
+	width: 100%;
+	height: 100%;
+	background-image: url("images/web_paper.png");
+}
+			
