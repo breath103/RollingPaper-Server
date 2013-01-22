@@ -2,160 +2,217 @@
 	function toDegree(radian){	
 		return radian / (Math.PI * 2 ) * 360;
 	}
-	var originalScreenSize = 400;
+	function toFormatedDate(date){
+		return date.getFullYear() + "-" + date.getMonth() +"-" + date.getDate(); 
+	}
+	function bulidContentStyleString(c,p){
+		c.x -= c.width*0.5;
+		c.y -= c.height*0.5;
+		return "width:" + c.width/p.width * 100 + "%;height:"+c.height/p.height * 100+"%;" +
+			   "left:"  + c.x/p.width * 100 + "%;top:"+c.y/p.height * 100+"%;" +
+			   "-webkit-transform:rotate("+toDegree(c.rotation)+"deg);";		 	
+	}
 %>
 <html lang="ko">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=2.0">
+		<link rel="shortcut icon" href="/icons/logo3.ico">
 		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
     	<script> 
     	var rollingpaper = <%-JSON.stringify(paper)%>
     	$(document).ready(function(){
-    			onBodyResize();
-    			$(".sound_content").click(function(){
-    					var audio = $( $(this).find("audio")[0] );
-    					console.log(audio);
-    					audio[0].play();
-    			});
+    		$(".sound_content").click(function(){
+    			var audio = $( $(this).find("audio")[0] );
+    			audio[0].play();
+    		});
+    		
+    		(function($) {
+			    $.fn.textfill = function(options) {
+			        var fontSize = options.maxFontPixels;
+			        var ourText = $('span:visible:first', this);
+			        var maxHeight = $(this).height();
+			        var maxWidth = $(this).width();
+			        var textHeight;
+			        var textWidth;
+			        do {
+			            ourText.css('font-size', fontSize);
+			            textHeight = ourText.height();
+			            textWidth = ourText.width();
+			            fontSize = fontSize - 1;
+			        } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
+			        return this;
+			    }
+			})(jQuery);
+			$('.fillText').textfill({ maxFontPixels: 128 });
     	});
-    	function onBodyResize(){
-    			$(".retain_size_ratio_base_height").each(function(i,e){
-		            	var $e = $(e);
-			            var size_ratio = Number($(this).attr("size_ratio"));
-			            var width = $(this).height() / size_ratio;
-			            $(this).width(width);
-			            var pos_ratio = Number($(this).attr("position_ratio"));
-			            var left = $(this).position().top / pos_ratio;
-			            $(this).css("left",left);
+    	
+    		function buildSize(width,height){
+				return{
+					width : width,
+					height : height,
+					ratio : height/width
+				};
+			}
+			
+			function autoResizeContentsContainer(){
+				// 1024/768
+				var leftBarWidth = 150;
+			
+				var originalSize = {
+					width  : <%-paper.width%> + leftBarWidth,
+					height : <%-paper.height%>
+				};
+				var paperRatio = originalSize.height / originalSize.width; 
+				
+				var $container = $(".paper_outer");
+				var $parent = $(".Container");// $container.parent();
+				
+				var currentSize = buildSize($parent.width(),$parent.height());
+				
+				//
+				if(paperRatio < currentSize.ratio){
+					$container.width(currentSize.width);
+					$container.height(currentSize.width*paperRatio);
+					$container.css({
+						"left": 0,
+						"top" : (currentSize.height - $container.height()) / 2
+					});
+				}
+				else{
+					$container.height(currentSize.height);
+					$container.width(currentSize.height/paperRatio);
+					$container.css({
+						"left" : (currentSize.width - $container.width()) / 2,
+						"top"  : 0
+					});
+				}
+				
+				$front = $(".Web_front");
+				$front.css({
+					left : (currentSize.width - $front.width())/2,
+					top  : (currentSize.height - $front.height())/2
 				});
-		}
+			}
+			$(document).ready(function(){				
+				
+				$(".title_container").click(function(){
+					$(this).clearQueue().fadeOut();
+				});
+				setTimeout(function(){
+					$(".title_container").trigger("click");
+				},1000000);
+				
+				
+				$(".Front_scroll_left").click(function(){
+					
+				});
+				$(".Front_scroll_Right").click(function(){
+					
+				});
+				
+				$($(".page_indicator")[0]).addClass("selected");
+				
+				$(".icon_door").click(function(){
+					$(".title_container").clearQueue().fadeIn();
+				});
+				
+				autoResizeContentsContainer();
+			});
 		</script>
-		<!-- Apple 홈화면 추가 -->
-		<link rel="apple-touch-icon" href="/images/Rolling_Paper_Logo.png" />
+		<!-- Apple IOS용 홈스크린 이미지 -->
+		<link rel="apple-touch-icon" href="/icons/logo3.png" />
 		<link rel="stylesheet" type="text/css" href="/css/paper-mobile.css">
-		<!-- 건들지 말자 -->
+		<!-- mobile  -->
 		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
-		<!-- mobile tap bar 전환 jquery -->
-		<script>
-			var contentToggle = false;
-			function toggleContentView() {
-				var slideFactor = 25;
+		<!-- mobile tap bar jquery -->
 
-				if (!contentToggle)
-					$(".content_container").clearQueue().transit({
-						"left" : "0%",
-						"width" : "100%"
-					});
-				else
-					$(".content_container").clearQueue().transit({
-						"left" : slideFactor + "%",
-						"width" : (100 - slideFactor) + "%"
-					});
-				contentToggle = !contentToggle;
-			}
-		</script>
-		<!--Tap바 전환 script -->
-		<!-- 건들지 말자  -->
 		<title>Rolling Paper</title>
-
 	</head>
-
-	<body onresize="onBodyResize();">
-		<div class="site_container">
-
-			<div class="tab_container" >
-			<div class="Logo" style="margin: 0.9em auto auto 0.3em;"></div>
-			<!-- 로고 이미지란  -->
-			<div class="Logo_Name" style="margin: auto auto auto 0.3em;"><h5>Rolling
-				Paper</h5></div>
-			<!-- 로고이름란 -->
-			<div class="Logo_down_shadow" style="margin: 0.5em auto auto 0.5em;"></div>
-			<!-- logo : 로고 선(border)과 그림자효과 (gradient) -->
-			<div class="From_down_shadow" style="margin: auto auto auto 0.5em"></div>
-			<!-- from : 로고 선(border)과 그림자효과 (gradient) -->
-			<div class="Place_To" style="margin: 0.1em auto 0.2em 0.5em;">
-				<h5>To.</h5>
-			</div>
-			<div class="Place_To_Name"><a
-					href="https://www.facebook.com/<%-paper.receiver_fb_id%>" target=_blank><h5><%-paper.receiver_name%></h5></a></div>
-			<!-- To. 받는사람이름 -->
-			<div class="Place_Holder" style="margin: 0.1em auto 1em 0.6em;">
-			</div>
-			<!-- 받는 Title -->
-			<div class="Place_Mark"></div>
-			<!-- 큰따옴표 -->
-			<div class="Place_Participate_Text"><h5><%-paper.title%></h5></div>
-			<!-- 메세지 title적는 란 -->
-			<div class="Place_From" style="margin: 0.1em auto 0.2em 0.4em;">
-				<font face=arial><h5>From.</h5></font>
-			</div>
-			<!-- From. 보낸사람이름 -->
-			<div class="Participate" style="margin: 0.1em auto 0.1em 0.6em;">
-			<% paper.participants.forEach(function printBr(e, i, array) { %>
-				<div class="Participate_List" style="margin: auto auto -0.9em 0.2em;">
-					<div class="Part_Image"	style="margin: auto auto auto auto;">
-						<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank><img alt="name1"
-							src="<%-e.picture%>" width=100% height=100%></a>
-					</div>
-					<div class="Part_Name" style="margin: auto auto auto auto;">
-						<a href="https://www.facebook.com/<%-e.facebook_id%>"
-							target=_blank><%-e.name%></a>
-					</div>
-				</div>
-				<!-- Participate List -->
-				<%});%>
-			</div>
-			<!-- 보내는 사람들 명단 -->
-		</div> <!--LEFT BAR-->
-		<!-- 건들지 말자  건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자 -->
-		<div class="Content_container" style="left: 25%; overflow:hidden;">
-		<%if(paper.contents.image){
-						paper.contents.image.forEach(function(e,i) {
-						var heightratio = e.height / originalScreenSize;
-						var y_ratio = e.y / originalScreenSize;
-						var size_ratio = e.height/e.width;
-						var position_ratio = e.y/e.x; //占쎄퀣苑?占썬끇?곻쭪占쎄섯 占쎈뗀??占싼딆뵠筌앸뜆肉?占쏙옙釉??뚢뫂?쀯㎘醫롮벥 占쎈?????쑬占??④쑴沅쏉옙?뺣뼄
-						%>
-						<div class ="image_content retain_size_ratio_base_height" 
-							position_ratio = "<%-position_ratio%>"
-							size_ratio = "<%-size_ratio%>"
-							style ="width:<%-e.width%>px;height:<%-heightratio*100%>%;position:absolute;left:<%-e.x%>px;top:<%-y_ratio*100%>%;-webkit-transform:rotate(<%-toDegree(e.rotation)%>deg);">
-							<img style="width:100%;height:100%;" src="<%-e.image.replace('localhost',server_ip)%>"/>
+	<body onresize="autoResizeContentsContainer();">
+	    <div class="title_container">
+	    	<div class="door_container">
+	     		<div class="door">
+	     			<div class="door_title fillText">
+	     				<span>"<%-paper.title%>"<span>
+	     			</div>
+	     			<div class="door_date">2013.01.20</div>
+	     			<div class="list_button" onClick="this.style.backgroundImage='url(/images/list_down.png)'"></div>
+	     		</div>
+	     		<div class="door_underbar">
+	     			<div class="under_scroll_container">
+	     				<div class="under_scroll_left"></div>
+	     				<div class="under_list_container">
+	     					<div class="under_list1_box">
+								<% paper.participants.forEach(function printBr(e, i, array) { %>
+									<div class="under_list">
+										<div class="under_list_image">
+											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
+												<img alt="name2" src="<%-e.picture%>" style="width:auto%;height:100%">
+											</a>
+										</div>
+										<div class="under_list_name">
+											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank> <%-e.name%> </a>
+										</div>
+									</div>
+								<%});%>
+							</div>
+							<!--div class="under_list2_box">
+								<% paper.participants.forEach(function printBr(e, i, array) { %>
+									<div class="under_list">
+										<div class="under_list_image">
+											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
+												<img alt="<%-e.name%>" src="<%-e.picture%>" style="width:auto;height:100%">
+											</a>
+										</div>
+										<div class="under_list_name">
+											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank> <%-e.name%> </a>
+										</div>
+									</div>									
+								<%});%>
+							</div-->			
 						</div>
-						<%});
-					}%>
-					<%if(paper.contents.sound){
-						paper.contents.sound.forEach(function(e,i) {
-						e.height = 50;
-						e.width  = 50;
-						e.rotation = 0;
-						var heightratio = e.height / originalScreenSize;
-						var y_ratio = e.y / originalScreenSize;
-						var size_ratio = e.height/e.width;
-						var position_ratio = e.y/e.x; //占쎄퀣苑?占썬끇?곻쭪占쎄섯 占쎈뗀??占싼딆뵠筌앸뜆肉?占쏙옙釉??뚢뫂?쀯㎘醫롮벥 占쎈?????쑬占??④쑴沅쏉옙?뺣뼄
-						%>
-						<div class ="sound_content retain_size_ratio_base_height" 
-							position_ratio = "<%-position_ratio%>"
-							size_ratio ="<%-size_ratio%>"
-							style ="width:<%-e.width%>px;height:<%-heightratio*100%>%;position:absolute;left:<%-e.x%>px;top:<%-y_ratio*100%>%;-webkit-transform:rotate(<%-toDegree(e.rotation)%>deg);">
-							<img style="width:100%;height:100%;" src="images/speaker2.png"/>
-							<audio controls="controls" style="display:none">
-								<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
-								Your browser does not support the audio element.
-							</audio>
+						<div class="under_scroll_right"></div>
+					</div>
+     			</div>
+     		</div>
+	    </div>
+	    
+		<!--contents 컨테이너-->
+		<div class="Container">
+			<div class="paper_outer" style="background-image:url('/background/<%-paper.background%>')">	
+				<div class="icon_door" onClick="this.style.backgroundImage='url(/images/pop-up2.png)'"></div>
+				<%if(paper.contents.image){
+					paper.contents.image.forEach(function(e,i){
+					var styleString = bulidContentStyleString(e,paper);					
+					%>
+						<div class ="image_content" style="<%-styleString%>">
+							<img src="<%-e.image.replace('localhost',server_ip)%>"/>
 						</div>
-						<%});
-					}%>
-			<button onclick="toggleContentView();">
-				전환
-			</button>
-		</div>
-		<!-- 건들지 말자  건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자건들지 말자 -->
+					<%});
+				}%>
+				<%if(paper.contents.sound){
+					paper.contents.sound.forEach(function(e,i) {
+					e.height = 50;
+					e.width  = 50;
+					e.rotation = 0;
+					var styleString = bulidContentStyleString(e,paper);
+					%>
+					<div class ="sound_content" style ="<%=styleString%>">
+						<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+						<audio controls="controls" style="display:none">
+							<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
+							Your browser does not support the audio element.
+						</audio>
+					</div>
+					<%});
+				}%>
+			</div>
 		</div>
 		<!-- SITE TOTAL CONTAINER-->
+
 	</body>
 </html>
 

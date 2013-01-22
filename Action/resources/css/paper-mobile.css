@@ -5,9 +5,21 @@ html, body {
 	width: 100%;
 	height: 100%;
 	font-size: 1em;
+	font-family: '맑은 고딕',Helvetica,sans-serif;
 	overflow: hidden;
 }
-
+.sound_content{
+	position: absolute;	
+}
+.image_content{
+	border-radius:5% 5% 5% 5%;
+	position: absolute;
+}
+.image_content img{
+	width:100%;
+	height:100%;
+	border-radius:5% 5% 5% 5%;
+}
 a:link {
 	color: #9a9e72;
 	text-decoration: none;
@@ -21,195 +33,144 @@ a:hover {
 a:active {
 	color: #0f4e3a;
 }/* selected link */
-
-		
-.site_container {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
+.title_container{
+	width:100%;
+	height:100%;
+	position:fixed;
+	left:0px;
+	top:0px;
+	background-color: rgba(19, 19, 14, 0.82);
+	z-index: 10000;
 }
-
-.tab_container {
-	display: inline-block;
-	width: 25%;
-	height: 100%;
-	background: #0f4e3a;
-}
-
-			
-.Logo {
-	width: 80%;
-	padding-top: 0.5em;
-	padding-bottom: 0em;
-	height: 15%;
-	background-image: url("images/Rolling_Paper_Logo.png");
-	background-size: 80% 80%;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
-.Logo_Name {
+.door_container{
 	width: 90%;
-	height: 3%;
-	background-color: transparent;
-	color: #ccbb86;
-	text-align: center;
-	text-shadow: 1px 1px 1px #888888;
-}
-
-.Logo_down_shadow {
-	width: 78%;
-	height: 3%;
-	padding-top: 0em;
-	padding-bottom: 0.3em;
-	border: 1px solid #a6a577;
-	border-bottom-style: none;
-	border-left-style: none;
-	border-right-style: none;
-	background-image: url("images/web_shadow.png");
-	background-size: 100% 100%;
-}
-
-.From_down_shadow {
-	position: absolute;
-	padding-top: 0em;
-	padding-bottom: 0.3em;
-	width: 20%;
-	height: 3%;
-	top: 88%;
-	left: 0px;
-	border: 1px solid #a6a577;
-	border-bottom-style: none;
-	border-left-style: none;
-	border-right-style: none;
-	background-image: url("images/web_shadow.png");
-	background-size: 100% 100%;
-	-webkit-transform: rotate(180deg);
-}
-
-.Place_To {
-	width: 80%;
-	padding-top: 0.1em;
-	padding-bottom: 0.1em;
-	height: 3%;
-	background-color: transparent;
-	color: #ccbb86;
-}
-
-.Place_To_Name{
-    position: absolute;
-    width: 20%;
-    top: 29%;
-    left: 7%;
-	padding-top: 0.1em;
-	padding-bottom: 0.1em;
-	padding-left: 0.2em;
-	height: 3%;
-	background-color: transparent;
-	color: #ccbb86;
-}
-
-.Place_Holder {
-	width: 73%;
-	height: 12%;
-	padding-left: 0em;
-	padding-right: 0.2em;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-	background-color: #0c3b2d;
-	border: #f64e02 dashed 1px;
-	border-radius: 4px;
-	margin-top: 0.8em;
-	margin-bottom: 0.8em;
-	font-weight: bold;
-	color: #ccbb86;
-	background: -webkit-gradient(radial, 50% 50%, 0, 50% 1%, 150, from(#0a402f),
-		to(#0c3b2c) );
-	text-align: center;
-}
-
-.Place_Mark {
-	position: absolute;
-	width: 17%;
-	height: 1.5%;
-	background-image: url("/images/web_apostrophe.png");
-	background-size: 100% 100%;
-	top: 36%;
-	left: 4.5%;
-}
-
-.Place_Participate_Text {
-	position: absolute;
-	width: 15%;
-	height: 10%;
-	top: 37%;
+	height: 90%;
+	position: relative;
+	top: 5%;
 	left: 5%;
+	background-color: transparent;
+}
+.door{
+	position: absolute;
+	width: 100%;
+	height: 73%;
+	background-image: url("/images/door.png");
+	background-size: 100% 100%;
+	z-index: 100000;
+}
+.door_title{
+	position: inherit;
+	width: 70%;
+	height: 25%;
+	left: 14%;
+	top: 55%;
+	color: #ccbb86;
+	text-shadow: 1px 1px 2px #888888;
+	background-color: transparent;
+	font-size: 250%;
+	text-align: center;
+	overflow:auto;
+}
+.door_date{
+	position: inherit;
+	width: 21%;
+	height: 5%;
+	left: 40%;
+	top: 82%;
 	color: #ccbb86;
 	text-align: center;
-	font-weight: bold;
+	font-size: 50%;
+	background-color: transparent;
 }
-
-.Place_From {
+.list_button{
+	position: relative;
+	width: 20%;
+	height: 8%;
+	top: 90%;
+	left: 75%;
+	background-image: url("/images/list_up.png");
+	background-size: 100% 100%;
+}
+.door_underbar{
+	position: absolute;
 	width: 100%;
-	height: 3%;
-	padding-top: 0.1em;
-	padding-bottom: 0.1em;
-	padding-left: 0.3em;
-	background-color: transparent;
-	color: #ccbb86;
-	margin-bottom: 0.5em;
+	height: 30%;
+	top: 70%; /*접었을때 47% 폈을때 70%*/
+	background-image: url("/images/underbar.png");
+	background-size: 100% 100%;
 }
 
-.Participate {
-	width: 72%;
-	height: 36%;
-	padding-right:0.4em;
-	background-color: transparent;
-	margin-bottom: 5em;
-	overflow: scroll;
-	overflow-x: hidden;
-}
+/*scroll start~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-.Participate_List {
-	width: 109%;
-	height: 22%;
-	background-color: transparent;
+.under_scroll_container{
+	position:relative;
+	width:88%;
+	height:67%;
+	background-color:transparent;
+	left: 6%;
+	top: 18%;
 }
-
-.Part_Image {
+.under_scroll_left{
 	float: left;
-	width: 1em;
-	height: 1em;
-	margin-bottom: 0.1em;
-	background-color: transparent;
+	width: 10%;
+	height: 100%;
+	background-color:transparent;
+	background-image: url("/images/left.png");
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-size: 35% 20%;
+}
+.under_list_container{
+	float: left;
+	width: 80%;
+	height: 100%;
+	overflow: scroll;
+	overflow-y:hidden;
+}
+.under_list1_box{
+	width: 500px;
+	height: 50%;
+}
+.under_list2_box{
+	width: 500px;
+	height: 50%;
+}
+.under_list{
+	position:inherit;
+	float: left;
+	width:18%;
+	height:100%;
+}
+.under_list_image{
+	float: left;
+	width: auto;
+	height: 80%;
+	margin-top: 4%;
+	margin-left: 4%;
+}
+.under_list_name{
+	position:static;
+	float: left;
+	width: auto;
+	height: 40%;
+	margin-top: 12%;
+	margin-right: 10%;
+	color: #ccbb86;
+	font-weight:bold;
+	font-size:x-small;
+	overflow:scroll;
+	overflow-y: hidden;
 }
 
-.Part_Name {
+
+.under_scroll_right{
 	float: right;
-	width: 4em;
-	height: 1.5em;
-	margin-bottom: 0.3em;
-	background-color: transparent;
-	font-size: 40%;
-}
-
-::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
-}
-
-::-webkit-scrollbar-button {
-	display: none;
-}
-
-::-webkit-scrollbar-track {
-	background: #1a533e;
-}
-
-::-webkit-scrollbar-thumb {
-	width: 8px;
-	height: 8px;
-	background: #738762;
+	width: 10%;
+	height: 100%;
+	background-image: url("/images/right.png");
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-size: 35% 20%;
 }
 
 h5 {
@@ -221,7 +182,16 @@ h5 {
 	-webkit-margin-end: 0px;
 	font-weight: bold;
 }
-
+.Container {
+	width:100%;
+	height:100%;
+	background-image: url("/images/main_background.png");
+}
+.Container .paper_outer{	
+	display: block;
+	position: relative;
+	
+}
 .content_container {
 	display: inline-block;
 	position: absolute;
@@ -229,6 +199,17 @@ h5 {
 	top: 0%;
 	width: 100%;
 	height: 100%;
-	background-image: url("images/web_paper.png");
+	background-image: url("/images/web_paper.png");
 }
-			
+.icon_door{
+	position: absolute;
+	float: left;
+	width: 11%;
+	height: 18%;
+	top: 1%;
+	left: 1%;
+	background-image: url("/images/pop-up.png");
+	background-size: 100% 100%;
+	z-index: 1000;
+}
+	

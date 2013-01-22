@@ -8,142 +8,225 @@
 	function bulidContentStyleString(c,p){
 		c.x -= c.width*0.5;
 		c.y -= c.height*0.5;
-		return "width:"+c.width/p.width * 100+"%;height:"+c.height/p.height * 100+"%;" +
-			   "left:"+c.x/p.width * 100+"%;top:"+c.y/p.height * 100+"%;" +
+		return "width:" + c.width/p.width * 100 + "%;height:"+c.height/p.height * 100+"%;" +
+			   "left:"  + c.x/p.width * 100 + "%;top:"+c.y/p.height * 100+"%;" +
 			   "-webkit-transform:rotate("+toDegree(c.rotation)+"deg);";
 			 	
 	}
 %>
+
 <!DOCTYPE html>
 <html lang="ko">
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="/css/paper.css">
+		<link rel="shortcut icon" href="/icons/logo3.ico">
 		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
-		<script>
-				function checkFBAuthResponse(response) { 
-					if( response.authResponse.userID == "<%-paper.receiver_fb_id%>"){
-					   	alert("받는사람 이시군요!");
-					}
-					else {
-						alert("관람자 이시군요!");
-					}	
-				}
-				function initFacebook()
-				{
-					FB.init({ appId: '333864290041286', status: false, cookie: true, xfbml: true ,oauth:true});
-					FB.getLoginStatus(function(response) {
-						console.log(response);
-						if (response.authResponse && response.authResponse.userID) {
-							checkFBAuthResponse(response);
-						}
-						else {
-							FB.login(function(response){
-								if (response.authResponse) {
-							    	checkFBAuthResponse(response);
-							    } else {
-							    
-							    }
-							});
-						}
-					});
-				}		
-		</script>
 		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
-		<script> 
+		<script>
+			function checkFBAuthResponse(response) { 
+				if( response.authResponse.userID == "<%-paper.receiver_fb_id%>"){
+				   	//alert("dfasd");
+				}
+				else {
+					//alert("asdfad");
+				}	
+			}
+			function initFacebook()
+			{
+				FB.init({ appId: '333864290041286', status: false, cookie: true, xfbml: true ,oauth:true});
+				FB.getLoginStatus(function(response) {
+					console.log(response);
+					if (response.authResponse && response.authResponse.userID) {
+						checkFBAuthResponse(response);
+					}
+					else {
+						FB.login(function(response){
+							if (response.authResponse) {
+						    	checkFBAuthResponse(response);
+						    } else {
+						    
+						    }
+						});
+					}
+				});
+			}		
 			var rollingpaper = <%-JSON.stringify(paper)%>
+			
+			
+			function buildSize(width,height){
+				return{
+					width : width,
+					height : height,
+					ratio : height/width
+				};
+			}
+			
+			function autoResizeContentsContainer(){
+				// 1024/768
+				var leftBarWidth = 150;
+			
+				var originalSize = {
+					width  : <%-paper.width%> + leftBarWidth,
+					height : <%-paper.height%>
+				};
+				var paperRatio = originalSize.height / originalSize.width; 
+				
+				var $container = $(".paper_outer");
+				var $parent = $(".Container");// $container.parent();
+				
+				var currentSize = buildSize($parent.width(),$parent.height());
+				
+				//
+				if(paperRatio < currentSize.ratio){
+					$container.width(currentSize.width);
+					$container.height(currentSize.width*paperRatio);
+					$container.css({
+						"left": 0,
+						"top" : (currentSize.height - $container.height()) / 2
+					});
+				}
+				else{
+					$container.height(currentSize.height);
+					$container.width(currentSize.height/paperRatio);
+					$container.css({
+						"left" : (currentSize.width - $container.width()) / 2,
+						"top"  : 0
+					});
+				}
+				
+				$front = $(".Web_front");
+				$front.css({
+					left : (currentSize.width - $front.width())/2,
+					top  : (currentSize.height - $front.height())/2
+				});
+			}
+			
 			
 			$(document).ready(function(){
 				initFacebook();
-				
-				onBodyResize();
 				$(".sound_content").click(function(){
 					var audio = $( $(this).find("audio")[0] );
 					console.log(audio);
 					audio[0].play();
 				});
+				autoResizeContentsContainer();
+				
+				
+				$(".clear_icon").click(function(){
+					$(".icon_door2").hide();
+					$(".title_container").clearQueue().fadeOut();
+				});
+				setTimeout(function(){
+					$(".title_container").trigger("click");
+				},1000000);
+				
+				
+				$(".under_scroll_left").click(function(){
+					$(".under_list_box").animate({"left": "-=465px"});
+					return false;
+				});
+				$(".under_scroll_right").click(function(){
+					$(".under_list_box").animate({"left": "+=465px"});
+					return false;
+				});
+				
+				$($(".page_indicator")[0]).addClass("selected");
+				
+				$(".icon_door").click(function(){
+					$(".title_container").clearQueue().fadeIn().css({"background-color":"transparent"});
+					$(".icon_door2").fadeIn();
+					
+				});
+				
+				$(".icon_door2").click(function(){
+					$(".icon_door").fadeIn();	
+					$(".title_container").clearQueue().fadeOut();	
+				});
 			});
+			
+			
 		</script>
 		
 		<title>Rolling Paper</title>
 	</head>
-	<body onresize="onBodyResize();">
-		<div class="Container" style="margin: auto;">
-			<div class="Left">
-				<div class="Logo" style="margin: 15% auto auto 8%;"></div>
-				<div class="Logo_Name" style="margin: auto auto auto 5%;">Rolling Paper</div>
-				<div class="Logo_down_shadow" style="margin: 10% auto auto 15%;"></div>
-				<div class="From_down_shadow" style="margin: 9% auto auto 15%"></div>
-				<div class="Place_To" style="margin: 24% auto auto 12%;">
-					<font face=arial>&nbsp;To.</font> 
-					<a href="https://www.facebook.com/<%-paper.receiver_fb_id%>" target=_blank>
-						<font face=arial>
-							<%-paper.receiver_name%>
-						</font>
-					</a>
-				</div>
-				<div class="Place_Holder" style="margin: 5% auto 20% 13%;">
-				</div>
-				<div class="Place_Mark"></div>
-				<div class="Place_Participate_Text"><%-paper.title%></div>
-				<div class="Place_From" style="margin: -5% auto 1% 12%;">
-					<font face=arial>&nbsp;From.</font>
-				</div>
-				<div class="Participate" style="margin: 3% auto 20% 16%;">
-					<% paper.participants.forEach(function printBr(e, i, array) { %>
-						<div class="Participate_List" style="margin: auto auto 4% auto;">
-							<div class="Part_Image" style="margin: auto auto auto auto;">
-								<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
-									<img alt="name1" src="<%-e.picture%>" style="width:100%;height:100%">
-								</a>
-							</div>
-							<div class="Part_Name"
-								style="margin: 10% auto auto auto;">
-								<a href="https://www.facebook.com/<%-e.facebook_id%>"target=_blank><%-e.name%></a>
-							</div>
-						</div>
-					<%});%>
-					<!-- Participate List -->
-				</div>
-			</div>
-			<div class="Right">
-				<div class="Right_Center" 
-					 style="width:<%-paper.width%>px;height:<%-paper.height%>px">
-					<%if(paper.contents.image){
-						paper.contents.image.forEach(function(e,i){
-						var styleString = bulidContentStyleString(e,paper);					
-						%>
+	<body onresize="autoResizeContentsContainer();">
+		<div class="Container" >
+			<!-- background 사이즈를 계산하는 부분을 다시 넣어야한다. 지금은 걍 10퍼센트로 고정-->
+			<div class="paper_outer" 
+				 style="background-image:url('/background/<%-paper.background%>'); background-size:<%-8%>%">	
+				<div class="icon_door"></div>
+				<div class="icon_door2"></div>
+				<%if(paper.contents.image){
+					paper.contents.image.forEach(function(e,i){
+					var styleString = bulidContentStyleString(e,paper);					
+					%>
 						<div class ="image_content" style="<%-styleString%>">
 							<img src="<%-e.image.replace('localhost',server_ip)%>"/>
 						</div>
-						<%});
-					}%>
-					<%if(paper.contents.sound){
-						paper.contents.sound.forEach(function(e,i) {
-						e.height = 50;
-						e.width  = 50;
-						e.rotation = 0;
-						var styleString = bulidContentStyleString(e,paper);
-						%>
-						<div class ="sound_content" style ="<%=styleString%>">
-							<img style="width:100%;height:100%;" src="images/speaker2.png"/>
-							<audio controls="controls" style="display:none">
-								<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
-								Your browser does not support the audio element.
-							</audio>
-						</div>
-						<%});
-					}%>
-					
-					<div class="Mo_Left" style="display:inline-block"></div>
-					<div class="Place_Holder2" style="position:relative;float:left;display:inline-block"></div>
-					<div class="Mo_Right" style="display:inline-block"></div>
-					<div class="Place_Date"></div>
-					<div class="Date">
-						<font color=#728560>&nbsp;<%-toFormatedDate(paper.created_time)%></font>
+					<%});
+				}%>
+				<%if(paper.contents.sound){
+					paper.contents.sound.forEach(function(e,i) {
+					e.height = 50;
+					e.width  = 50;
+					e.rotation = 0;
+					var styleString = bulidContentStyleString(e,paper);
+					%>
+					<div class ="sound_content" style ="<%=styleString%>">
+						<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+						<audio controls="controls" style="display:none">
+							<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
+							Your browser does not support the audio element.
+						</audio>
 					</div>
+					<%});
+				}%>
+			</div>
+		</div>
+		
+		<div class="title_container">
+			<div class="Web_front">
+			<div class="clear_icon"></div>
+				<div class="Web_front_title">"<%-paper.title%>"</div>
+				<div class="Web_front_date">2013.08.15</div>
+		
+				<div class="under_scroll_container">
+					<div class="under_scroll_left"></div>
+		
+					<div class="under_list_container">
+						
+						
+						<div class="under_list_box">
+							
+							<% paper.participants.forEach(function printBr(e, i, array) { %>
+								<div class="under_list">
+									<div class="under_list_image">
+										<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
+											<img alt="name2" src="<%-e.picture%>" style="width:100%;height:100%">
+										</a>
+									</div>
+									<div class="under_list_name">
+										<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank> <%-e.name%> </a>
+									</div>
+								</div>
+							<%});%>
+							
+						</div>
+						
+					</div>
+					
+					<div class="under_scroll_right"></div>
 				</div>
+		
+				<!--앞페이지 로딩-->
+				<!--<div class="Front_loading">
+					<%var participantsPerPage = 4;
+						for(var i=0;i<paper.participants_count/participantsPerPage;i++){%>
+						<div class="page_indicator"></div>	
+					<%}%>
+				</div>-->
 			</div>
 		</div>
 	</body>

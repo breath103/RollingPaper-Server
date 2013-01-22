@@ -11,7 +11,7 @@ var async    = require('async');
 var vm 		 = require('vm');
 
 function initExpressEndSocketIO(){
-		app.configure(function() {
+	app.configure(function() {
 		app.set('views', __dirname + '/views');
 		app.set('view options', { layout: false });
 		app.set('view engine', 'ejs');
@@ -74,8 +74,7 @@ io.sockets.on('connection', function (socket) {
     
     var deviceMotionSendCheck = 0;
     socket.on("deviceMotion",function(data){
-    	console.log(deviceMotionSendCheck++);
-    
+    	//console.log(deviceMotionSendCheck++);
     	data.id = socket.id ;
     	viewClients.forEach(function(client) {
 	    	client.write( JSON.stringify({type:"deviceMotion",data:data}) +"\r\n");

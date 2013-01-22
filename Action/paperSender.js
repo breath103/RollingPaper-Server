@@ -34,7 +34,7 @@ function SendingProcess() {
 						currentState = "SENDING";
 						var facebookGraph = new facebook.GraphAPI(user.facebook_accesstoken);
 						facebookGraph.putObject(paper.receiver_fb_id,"feed",{ 
-								message: util.format('%s님이 %s님에게 보낼 "%s" 이벤트를 당신과 함께 준비하고 싶어합니다.',user.name,paper.receiver_name,paper.title), 
+								message: util.format('%s님이 %s님에게 "%s" 롤링페이퍼를 선물하셨습니다.',user.name,paper.receiver_name,paper.title), 
 							    link : util.format("http://%s/paper?v=%d",server_ip,paper.idx), 
 								name: 'Rolling Paper', 
 								description: 'RollingPaper'
