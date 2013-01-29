@@ -19,7 +19,22 @@ Array.prototype.remove = function(o){
 	this.splice(this.indexOf(o), 1);
 };
 
+DBTemplate.getSingleton();
 DBTemplate = new DBTemplate();
+
+
+
+function randomString(length) {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
+    if (! length) {
+        length = Math.floor(Math.random() * chars.length);
+    }
+    var str = '';
+    for (var i = 0; i < length; i++) {
+        str += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return str;
+}
 
 
 function initExpressEndSocketIO(){
@@ -93,7 +108,9 @@ function initExpressEndSocketIO(){
 	});
 	
 	//현재 참여중인 페이퍼들의 리스트
-	app.post("/user/paperList",function(req,res) { 
+	app.post("/user/paperList.json",function(req,res) { 
+		res.setHeader('Content-Type', 'text/json');
+		
 		var user_idx = req.body["user_idx"];
 		if(user_idx){
 			Step(
@@ -137,8 +154,8 @@ function initExpressEndSocketIO(){
 		var user_idx  		 = req.body[ "user_idx"  ];
 		var paper_idx 	 	 = req.body[ "paper_idx" ];
 		var facebook_friends = JSON.parse(req.body["facebook_friends"]); 
+		
 		if(user_idx && paper_idx){
-			
 			var processedFriendCount = 0;
 			var facebook_only_friend = 0;
 			function addProcessedCount() { 
@@ -158,16 +175,9 @@ function initExpressEndSocketIO(){
 						if(error) 
 							console.log(error);
 						var friend_id = results[0].guest_idx;
-						console.log(friend_fb_id," : ",friend_id);
 						if(friend_id){
-							console.log("joined user : ",friend_fb_id);
+							console.log("joined user : ",friend_fb_id," : ",friend_id);
 							addProcessedCount();
-							/*
-							res.render('text.ejs', {text : {
-								facebook_id : friend_fb_id,
-								friend_id	: friend_id
-							}});
-							*/	
 						}
 						else {
 							console.log("not joined user");
@@ -175,6 +185,7 @@ function initExpressEndSocketIO(){
 							//앱을 사용하는 유저가 아닌경우, 
 							//초대한 사람의 정보를 조회하여 액세스 토큰을 얻는다
 							//또한, 초대하려고 하는 페이퍼의 정확한 정보를 얻는다.
+							
 							Step(
 								function(){
 									console.log(user_idx);
@@ -206,7 +217,6 @@ function initExpressEndSocketIO(){
 								}
 							);
 						}
-							
 					}
 				);
 
@@ -444,7 +454,8 @@ function initExpressEndSocketIO(){
 	app.get("/paper/backgroundList",function(req,res){
 		fs.readdir("resources/background",function(err,files){
 			files.sort();
-			res.render('text.ejs', {text : {backgrounds : files}});
+			res.setHeader('Content-Type', 'text/json');
+			res.render('text.ejs', {text : files});
 		});
 	});
 	app.post("/paper/participants",function(req,res) {
