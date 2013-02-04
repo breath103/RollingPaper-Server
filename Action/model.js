@@ -27,6 +27,17 @@ function User(dict){
 	if(dict) 
 		initObjectWithDict(this,dict);
 }
+User.getAll = function(success){
+	DBTemplate.getSingleton().query("select * from USER",
+	[],
+	function(error,results){
+		if(error)
+			throw error;
+		else{
+			
+		}	
+	});
+}
 User.userWithIdx = function(id,success){
 	DBTemplate.getSingleton().query("select * from USER where idx = ?",
 									[id],
@@ -69,6 +80,12 @@ User.userWithEmail = function(email,success){
 										}
 									});	
 };
+User.usersWithDictArray = function(dictArray){
+	for(var index in dictArray){
+		dictArray[index] = new User(dictArray[index]);
+	}
+	return dictArray;
+}
 User.insert = function(user,success){
 	DBTemplate.getSingleton().insert("USER",user,function(error,results){
 		if(error){
