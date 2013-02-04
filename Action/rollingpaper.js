@@ -230,14 +230,19 @@ function randomString(length) {
 			var paper_idx = Number(req.param("v"));
 			if(paper_idx){
 				Paper.getCompletePaperWithID(paper_idx,function(paper){
-					var viewName = req.useragent.isMobile ? "paper-mobile.ejs" : 'paper.ejs';
-					if(req.param("m")) viewName = "paper-mobile.ejs";
-					if(req.param("t")) viewName = "paper.ejs";
-					/* 페이스북 인증을 해야지만 페이지를 볼 수 있도록 인증페이지로 넘겨버리는 부분 */ 
-					res.render(viewName, {
-						server_ip : server_ip,
-						paper     : paper
-					});
+					if(paper){
+						var viewName = req.useragent.isMobile ? "paper-mobile.ejs" : 'paper.ejs';
+						if(req.param("m")) viewName = "paper-mobile.ejs";
+						if(req.param("t")) viewName = "paper.ejs";
+						/* 페이스북 인증을 해야지만 페이지를 볼 수 있도록 인증페이지로 넘겨버리는 부분 */ 
+						res.render(viewName, {
+							server_ip : server_ip,
+							paper     : paper
+						});	
+					}
+					else{
+						res.render('text.ejs', {text : "not valid paper id : " + paper_idx});
+					}					
 				},function(error){
 					res.render('text.ejs', {text :{error : error.toString()}});
 				});
@@ -488,6 +493,7 @@ function randomString(length) {
 			});
 		});
 		
+		
 		app.post("/paper/editContent/image",function(req,res){
 			var image_idx = Number(req.body["idx"]);
 			var rotation  = Number(req.body['rotation']);
@@ -582,6 +588,47 @@ function randomString(length) {
 		});
 		
 		
+		app.all('/paper/imageContent/:id([0-9]+)', function(req,res,next){
+			var content_idx = Number(req.param("id"));
+			ImageContent.imageContentWithIdx(content_idx,function(imageContent){
+				req.imageContent = imageContent;
+				if(ImageContent){
+					console.log("APP ++ ",imageContent);
+					next();
+				}
+				else{
+					res.render('text.ejs', {text : {error : "not validate imageContent idx "+content_idx}});
+					next(new Error('cannot find ImageContent ' + content_idx));
+				}
+			});
+		});
+		
+		
+		app.del("/paper/ImageContent/:id([0-9]+)",function(req,res){
+			var user_idx  = Number(req.body["user_idx"]);
+			var image_idx = Number(req.body["image_idx"]);
+			
+			if(user_idx && image_idx){
+				Step(
+					function(){
+						DBTemplate.query("call deleteImageContent(?)",[image_idx],this);
+					},
+					function(error,results) {
+						if(error){
+							console.log(error);
+							res.render('text.ejs', {text : {error : "DB Fetch Fail"}});
+						}
+						else{
+							res.render('text.ejs', {text : {success : null}});
+						}
+					}
+				);
+			}
+		});
+		
+		/**
+		* 컨텐츠 삭제 옛날버젼
+		*/
 		app.post("/paper/deleteContent/image",function(req,res) {
 			var user_idx = Number(req.body["user_idx"]);
 			var image_idx = Number(req.body["image_idx"]);
@@ -627,7 +674,7 @@ function randomString(length) {
 	}
 	function UserRoutes(){
 		// 페이스북 아이디를 가지고 회원가입할때의 플로우
-		app.post("/user/joinWithFacebook",function(req,res){
+		app.post("/user/joinWithFacebook.json",function(req,res){
 			var params = req.body;
 			
 			Step(

@@ -226,6 +226,20 @@ function ImageContent(dict){
 
 ImageContent.prototype = Model.prototype;
 ImageContent.prototype.constructor = ImageContent;
+ImageContent.imageContentWithIdx = function(id,success){
+	DBTemplate.getSingleton().query("select * from IMAGE_CONTENT where idx = ?",
+									[id],
+									function(error, results) {
+										if (error) {
+											success(null);
+										} else {
+											if(results && results[0])
+												success(new ImageContent(results[0]));
+											else 
+												success(null);
+										}
+									});
+};
 ImageContent.insert = function(params,success){
 	var image 	  = params.imageFile;
 	var paper_idx = Number(params["paper_idx"]);
@@ -262,13 +276,27 @@ ImageContent.insert = function(params,success){
 	);
 };
 
+
 function SoundContent(dict){
 	if(dict) 
 		initObjectWithDict(this,dict);
 }
 SoundContent.prototype = Model.prototype;
 SoundContent.prototype.constructor = SoundContent;
-
+SoundContent.soundContentWithIdx = function(id,success){
+	DBTemplate.getSingleton().query("select * from SOUND_CONTENT where idx = ?",
+									[id],
+									function(error, results) {
+										if (error) {
+											success(null);
+										} else {
+											if(results && results[0])
+												success(new SoundContent(results[0]));
+											else 
+												success(null);
+										}
+									});
+};
 
 
 function Notice(dict){
