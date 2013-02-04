@@ -27,14 +27,14 @@ function User(dict){
 	if(dict) 
 		initObjectWithDict(this,dict);
 }
-User.getAll = function(success){
+User.allUsers = function(success){
 	DBTemplate.getSingleton().query("select * from USER",
 	[],
 	function(error,results){
 		if(error)
 			throw error;
 		else{
-			
+			success(User.usersWithDictArray(results));
 		}	
 	});
 }

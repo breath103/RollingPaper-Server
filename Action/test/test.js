@@ -36,17 +36,26 @@ describe('Notice API', function(){
 
 describe('User API', function(){
 	describe('user List API',function(){
+		var Users = null;
 		it("should return whole list Of User",function(done){
-			done();
+			User.allUsers(function(users){
+				Users = users;
+				users.should.be.an.instanceOf(Array);
+				for(var key in users){
+					users[key].should.be.an.instanceOf(User);
+				}
+				console.log(users);
+				done();
+			});
 		});
 		
 		it("should return User that same idx",function(done){
-			var testIdx = 3;
+			var testIdx = Users[0].idx;
 			User.userWithIdx(testIdx,function(user){
 				if(user){
 					user.should.be.an.instanceof(User);
 					should.equal(testIdx,user.idx);
-					console.log(user);
+				//	should.equal(Users[0],user);
 				}
 				done();	
 			});
