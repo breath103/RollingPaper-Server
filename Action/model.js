@@ -6,9 +6,15 @@ var Step	   = require("step");
 var fs 		   = require("fs");
 var util       = require("util");
 
+
+
+
+
+
+
 function initObjectWithDict(object,dict){
 	for(var key in dict){
-		if(typeof(dict[key]) != "function")
+		if(typeof(dict[key]) != "function") 
 			object[key] = dict[key];
 	}
 }
@@ -39,7 +45,8 @@ User.allUsers = function(success){
 	});
 }
 User.userWithIdx = function(id,success){
-	DBTemplate.getSingleton().query("select * from USER where idx = ?",
+	if(Number(id)){
+		DBTemplate.getSingleton().query("select * from USER where idx = ?",
 									[id],
 									function(error, results) {
 										if (error) {
@@ -50,8 +57,30 @@ User.userWithIdx = function(id,success){
 											else 
 												success(null);
 										}
-									});
+									});	
+	}
+	else 
+		success(null);
+	
 };
+User.usersWithFacebookIDs = function(facebook_ids,callback){	
+	DBTemplate.getSingleton().query(util.format("select * from USER where facebook_id IN (%s) ",facebook_ids.join(",")),[],
+		function(error,results) { 
+			if(error){
+				console.log(error);
+				callback();
+			}
+			else{
+				callback(User.usersWithDictArray(results));
+			}
+		});	
+};
+User.usersWithDictArray = function(array){
+	for(var index in array){
+		array[index] = new User(array[index]);	
+	}
+	return array;
+}
 User.userWithFacebookID = function(facebook_id,success){
 	DBTemplate.getSingleton().query("select * from USER where facebook_id=?",
 									[facebook_id],
@@ -80,12 +109,7 @@ User.userWithEmail = function(email,success){
 										}
 									});	
 };
-User.usersWithDictArray = function(dictArray){
-	for(var index in dictArray){
-		dictArray[index] = new User(dictArray[index]);
-	}
-	return dictArray;
-}
+
 User.insert = function(user,success){
 	DBTemplate.getSingleton().insert("USER",user,function(error,results){
 		if(error){
@@ -152,6 +176,15 @@ function Paper(dict) {
 }
 Paper.prototype = Model.prototype;
 Paper.prototype.constructor = Paper;
+Paper.model = {
+	table_name : "ROLLING_PAPER",
+	primary_key : "idx",
+	fields : {
+		"idx" : {
+			type : Number
+		}	
+	}
+}
 Paper.insert = function(paper,success,failure){
 	DBTemplate.getSingleton().query("call createRollingPaper(?,?,?,?,?,?,?,?)",
 					[paper.creator_idx,
@@ -171,10 +204,24 @@ Paper.insert = function(paper,success,failure){
 						}
 					});
 };
+Paper.findAll = function(success,failure){
+	DBTemplate.getSingleton().query("select * from ROLLING_PAPER",
+					[],
+		    		function(error,results){ 
+					 	if(error){
+					 		failure(error);
+					 	}
+						else{
+							success(results);
+						}
+					});
+		
+};
 Paper.getCompletePaperWithID = function(id,success,failure){
 	DBTemplate.getSingleton().query("call getPaperForWebView(?)", 
 		[id], 
 		function(error, results) {
+			console.log(error,results);
 			if (error) {
 				failure(error);	
 			}else if (results.length > 1 && 
@@ -232,6 +279,28 @@ Paper.prototype = {
 				success(results[0]);
 			}
 		});
+	},
+	setFields : function(json){
+		var updateableFields = [
+			"background",
+			"width",
+			"height",
+			"notice",
+			"receive_tel",
+			"receive_time",
+			"receiver_fb_id",
+			"receiver_name",
+			"target_email",
+			"title"
+		];
+		var self = this;
+		updateableFields.forEach(function(v,i){
+			if(json[v]!=undefined)
+			{
+				self[v] = json[v];
+				console.log(self[v],v,json[v]);
+			}
+		});
 	}
 };
 
@@ -257,6 +326,29 @@ ImageContent.imageContentWithIdx = function(id,success){
 										}
 									});
 };
+ImageContent.deleteWithIdx = function(image_idx,success,failure){
+	DBTemplate.getSingleton().query("call deleteImageContent(?)", 
+	[image_idx],
+	function(error, results) {
+		if (error) {
+			failure(error);
+		} else {
+			success();
+		}
+	});
+}
+ImageContent.update = function(image,success,failure){
+	console.log(image);
+	DBTemplate.getSingleton().query("call editImageContent(?,?,?,?,?,?,?)", 
+		[image.idx, image.x, image.y, image.width, image.height, image.rotation, image.image],
+		function(error, results) {
+			if (error) {
+				failure(error);
+			} else {
+				success(new ImageContent(results[0][0]));
+			}
+		});
+}
 ImageContent.insert = function(params,success){
 	var image 	  = params.imageFile;
 	var paper_idx = Number(params["paper_idx"]);
@@ -268,7 +360,7 @@ ImageContent.insert = function(params,success){
 	var y 		  = Number(params['y']);
 	
 	var imageType = image.type.split("/")[1];
-	var new_file_name = util.format("%s_%s_%s.%s",this.user_idx ,this.paper_idx ,(new Date()).getTime() ,imageType );
+	var new_file_name = util.format("%s_%s_%s.%s",user_idx ,paper_idx ,(new Date()).getTime() ,imageType );
 	var target_path = util.format("%s/resources/uploads/%s",__dirname,new_file_name);
 	
 	Step(
@@ -277,7 +369,7 @@ ImageContent.insert = function(params,success){
 					  target_path , 
 			  	      this);
 	    },function(error){
-	    	if(error)
+		    if(error)
 	    		throw error;
 	    	else
 	    		DBTemplate.getSingleton().query("call insertImageContent(?,?,?,?,?,?,?,?)",
@@ -285,12 +377,18 @@ ImageContent.insert = function(params,success){
 												util.format("http://localhost/uploads/%s",new_file_name)],
 												this);
 	    },function(error,results){
+	    	console.log("DB : ",error,results);
 	    	if(error)
 	    		throw error;
 	    	else
-	    		success(results[0][0]);
+	    		success(new ImageContent(results[0][0]));
 	    }
 	);
+};
+ImageContent.prototype = {
+	delete : function(success,failure){
+		ImageContent.deleteWithIdx(this.idx,success,failure);
+	}
 };
 
 
@@ -300,6 +398,54 @@ function SoundContent(dict){
 }
 SoundContent.prototype = Model.prototype;
 SoundContent.prototype.constructor = SoundContent;
+SoundContent.insert = function(params,success){
+	var sound 	  = params.soundFile;
+	var paper_idx = Number(params["paper_idx"]);
+	var user_idx  = Number(params["user_idx"]);
+	var rotation  = Number(params['rotation']);
+	var width     = Number(params["width"]);
+	var height    = Number(params["height"]);
+	var x 	   	  = Number(params['x']);
+	var y 		  = Number(params['y']);
+	
+	var soundType = sound.type.split("/")[1];
+	var new_file_name = util.format("%s_%s_%s.%s",user_idx ,paper_idx ,(new Date()).getTime() ,soundType );
+	var target_path = util.format("%s/resources/uploads/%s",__dirname,new_file_name);
+	
+	Step(
+		function(){
+			fs.rename(sound.path, 
+					  target_path , 
+			  	      this);
+	    },function(error){
+	    	if(error)
+	    		throw error;
+	    	else
+	    		DBTemplate.getSingleton().query("call insertSoundContent(?,?,?,?,?)", 
+	    										[paper_idx, user_idx, x, y, 
+	    											util.format("http://localhost/uploads/%s", new_file_name)],
+												this);
+	    },function(error,results){
+	    	if(error)
+	    		throw error;
+	    	else
+	    		success(new SoundContent(results[0][0]));
+	    }
+	);
+};
+SoundContent.update = function(sound,success,failure){
+	console.log(sound);
+	DBTemplate.getSingleton().query("call editSoundContent(?,?,?,?,?,?,?)", 
+			[sound.idx, sound.x, sound.y, sound.width, sound.height, sound.rotation, sound.sound],
+		function(error, results) {
+			if (error) {
+				failure(error);
+			} else {
+				success(new SoundContent(results[0][0]));
+			}
+		});
+		
+};
 SoundContent.soundContentWithIdx = function(id,success){
 	DBTemplate.getSingleton().query("select * from SOUND_CONTENT where idx = ?",
 									[id],
@@ -314,6 +460,24 @@ SoundContent.soundContentWithIdx = function(id,success){
 										}
 									});
 };
+SoundContent.deleteWithIdx = function(sound_idx,success,failure){
+	DBTemplate.getSingleton().query("call deleteSoundContent(?)", 
+	[sound_idx],
+	function(error, results) {
+		if (error) {
+			failure(error);
+		} else {
+			success();
+		}
+	});
+};
+SoundContent.prototype = {
+	delete : function(success,failure){
+		SoundContent.deleteWithIdx(this.idx,success,failure);
+	}
+};
+
+
 
 
 function Notice(dict){
@@ -379,7 +543,8 @@ var Exports = {
 	User   : User,
 	Notice : Notice,
 	Paper  : Paper ,
-	ImageContent : ImageContent
+	ImageContent : ImageContent,
+	SoundContent : SoundContent
 };
 
 module.exports = Exports;

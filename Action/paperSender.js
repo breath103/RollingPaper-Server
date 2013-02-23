@@ -3,11 +3,25 @@ var util       = require("util");
 var Step 	   = require("step");
 var facebook   = require('facebook-graph');
 
+var path           = require('path')
+  , templatesDir   = path.resolve(__dirname, 'mailTemplates')
+  , emailTemplates = require('email-templates')
+  , nodemailer     = require('nodemailer');
 
 
 DBTemplate = new DBTemplate();
 
 var server_ip = "210.122.0.164:8001";
+
+var transport = nodemailer.createTransport("SMTP", {
+      service: "Gmail",
+      auth: {
+        user: "breath103@gmail.com",
+        pass: "dltkdgus"
+      }
+    });
+
+
 
 
 var currentState = "SENDING"
@@ -32,13 +46,45 @@ function SendingProcess() {
 						console.log("전송 : ",paper);
 						console.log("유저 : ",user);
 						currentState = "SENDING";
-						var facebookGraph = new facebook.GraphAPI(user.facebook_accesstoken);
-						facebookGraph.putObject(paper.receiver_fb_id,"feed",{ 
-								message: util.format('%s님이 %s님에게 "%s" 롤링페이퍼를 선물하셨습니다.',user.name,paper.receiver_name,paper.title), 
-							    link : util.format("http://%s/paper?v=%d",server_ip,paper.idx), 
-								name: 'Rolling Paper', 
-								description: 'RollingPaper'
-							} , this);
+						
+						(function(user,paper){
+							transport.sendMail({
+					    		from: user.name,
+					    		to: "flowithsuelee@gmail.com",
+					    		subject: paper.title,
+					    		html: util.format("<html>" + 
+					    			"<a href = 'http://210.122.0.119:8001/paper?v=%d'>" +
+					    				"<img style='width:50%;height:auto' src='http://210.122.0.119:8001/img/email_bg.png'/>" +
+					    			"</a>"+
+					    		"</html>",paper.idx)
+					    	},function(error,results){
+					    		console.log(results);
+					    	});   
+						})(user,paper);
+						
+						
+						    // An example users object with formatted email function
+					    var locals = {
+					    	email: paper.target_email,
+					    	name: {
+					        	first: user.name
+					        }
+					    };
+					    if(locals.email){
+							transport.sendMail({
+					    		from: user.name,
+					    		to: locals.email,
+					    		subject: paper.title,
+					    		html: util.format("<html>" + 
+					    			"<a href = 'http://210.122.0.119:8001/paper?v=%d'>" +
+					    				"<img style='width:50%;height:auto' src='http://210.122.0.119:8001/img/email_bg.png'/>" +
+					    			"</a>"+
+					    		"</html>",paper.idx)
+					    	},this);    
+					    }
+					    else{
+						    this(NULL,NULL);	    
+					    }
 					}
 				}
 				else{
@@ -55,7 +101,7 @@ function SendingProcess() {
 			},
 			function(error,result){
 				if(error) console.log(error);
-				console.log("Facebook uploda Complete : ",result);
+				console.log("Email Sending uploda Complete : ",result);
 				DBTemplate.query("UPDATE ROLLING_PAPER SET is_sended='SENDED' WHERE idx=?;",[paper.idx],this);
 			},
 			function(error,result){

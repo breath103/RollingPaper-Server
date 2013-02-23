@@ -83,12 +83,21 @@ a:active {
 	background-color: transparent;
 }
 .list_button{
-	position: relative;
+	position: absolute;
 	width: 20%;
 	height: 8%;
 	top: 90%;
 	left: 75%;
 	background-image: url("/images/list_up.png");
+	background-size: 100% 100%;
+}
+.list_button2{
+	position: absolute;
+	width: 20%;
+	height: 8%;
+	top: 90%;
+	left: 75%;
+	background-image: url("/images/list_down.png");
 	background-size: 100% 100%;
 }
 .door_underbar{
@@ -127,42 +136,35 @@ a:active {
 	overflow: scroll;
 	overflow-y:hidden;
 }
-.under_list1_box{
+.under_list_box{
+	position: relative;
 	width: 500px;
-	height: 50%;
-}
-.under_list2_box{
-	width: 500px;
-	height: 50%;
+	height: 60%;
 }
 .under_list{
-	position:inherit;
 	float: left;
 	width:18%;
 	height:100%;
+	margin-top:3%;
 }
 .under_list_image{
 	float: left;
-	width: auto;
+	width: 30%;
 	height: 80%;
 	margin-top: 4%;
-	margin-left: 4%;
+	margin-left: 6%;
 }
 .under_list_name{
-	position:static;
-	float: left;
-	width: auto;
+	float: right;
+	width: 45%;
 	height: 40%;
-	margin-top: 12%;
-	margin-right: 10%;
-	color: #ccbb86;
-	font-weight:bold;
-	font-size:x-small;
-	overflow:scroll;
-	overflow-y: hidden;
+	margin-right: 5%;
+	margin-top: 15%;
+	color: #ccbb86;	
+	font-weight: bold;
+	font-size: 60%;
+	overflow:hidden;
 }
-
-
 .under_scroll_right{
 	float: right;
 	width: 10%;
@@ -185,7 +187,12 @@ h5 {
 .Container {
 	width:100%;
 	height:100%;
-	background-image: url("/images/main_background.png");
+	background-image: url("/images/main_background.png");	
+}
+.default{
+	background-color: white;
+	width: 30px;
+	height: 30px;	
 }
 .Container .paper_outer{	
 	display: block;
@@ -210,6 +217,22 @@ h5 {
 	left: 1%;
 	background-image: url("/images/pop-up.png");
 	background-size: 100% 100%;
+	max-height: 50px;
+	max-width: 50px;
 	z-index: 1000;
+}
+.icon_door2{
+	position: absolute;
+	float: left;
+	width: 11%;
+	height: 18%;
+	top: 1%;
+	left: 1%;
+	background-image: url("/images/pop-up2.png");
+	background-position: center center;
+	background-size: 100% 100%;
+	max-height: 50px;
+	max-width: 50px;
+	z-index: 1000;	
 }
 	

@@ -118,7 +118,7 @@ DBTemplate.prototype.update = function(tableName,
 	}
 	// UPDATE `RollingPaper`.`NOTICE` SET `text`='gasdgasdgfasdf' WHERE `idx`='1';
 
-	this.query(util.format("UPDATE %s SET %s WHERE %s = %s", tableName, setArray.join(","),indexName,indexValue,index), 
+	this.query(util.format("UPDATE %s SET %s WHERE %s = %s", tableName, setArray.join(","),indexName,indexValue), 
 				valueArray,
 				callback);	
 }

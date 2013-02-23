@@ -11,7 +11,23 @@
 					<key>kind</key>
 					<string>software-package</string>
 					<key>url</key>
-					<string>http://210.122.0.164:8001/RollingPaper.ipa</string>
+					<string>http://210.122.0.119:8001/RollingPaper.ipa</string>
+				</dict>
+				<dict>
+					<key>kind</key>
+					<string>full-size-image</string>
+					<key>needs-shine</key>
+					<true/>
+					<key>url</key>
+					<string>dd</string>
+				</dict>
+				<dict>
+					<key>kind</key>
+					<string>display-image</string>
+					<key>needs-shine</key>
+					<true/>
+					<key>url</key>
+					<string>aa</string>
 				</dict>
 			</array>
 			<key>metadata</key>
@@ -22,8 +38,10 @@
 				<string>1.0</string>
 				<key>kind</key>
 				<string>software</string>
+				<key>subtitle</key>
+				<string>RollingPaper</string>
 				<key>title</key>
-				<string>RollingPaperDemo</string>
+				<string>RollingPaper</string>
 			</dict>
 		</dict>
 	</array>

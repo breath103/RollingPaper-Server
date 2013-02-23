@@ -95,27 +95,54 @@
 					top  : (currentSize.height - $front.height())/2
 				});
 			}
-			$(document).ready(function(){				
+			
+			$(document).ready(function(){
+			
+				$(".list_button2").hide();
 				
 				$(".title_container").click(function(){
+					$(".icon_door2").hide();
 					$(this).clearQueue().fadeOut();
 				});
 				setTimeout(function(){
 					$(".title_container").trigger("click");
 				},1000000);
 				
-				
-				$(".Front_scroll_left").click(function(){
-					
+				$(".under_scroll_left").click(function(){
+					$(".under_list_box").animate({"left": "+=180px"});
+					return false;
 				});
-				$(".Front_scroll_Right").click(function(){
-					
+				
+				$(".under_scroll_right").click(function(){
+					$(".under_list_box").animate({"left": "-=180px"});
+					return false;
 				});
 				
 				$($(".page_indicator")[0]).addClass("selected");
 				
 				$(".icon_door").click(function(){
 					$(".title_container").clearQueue().fadeIn();
+					$(".icon_door2").fadeIn();
+					
+				});
+				
+				$(".icon_door2").click(function(){
+					$(".icon_door").fadeIn();	
+					$(".title_container").clearQueue().fadeOut();	
+				});
+				
+				$(".list_button").click(function(){
+					$(".door_underbar").animate({"top": "47%"});
+					$(".list_button2").fadeIn();
+					$(this).clearQueue().fadeOut();
+					return false;		
+				});
+				
+				$(".list_button2").click(function(){
+					$(".door_underbar").animate({"top": "70%"});
+					$(".list_button").fadeIn();
+					$(this).clearQueue().fadeOut();
+					return false;				
 				});
 				
 				autoResizeContentsContainer();
@@ -139,13 +166,14 @@
 	     				<span>"<%-paper.title%>"<span>
 	     			</div>
 	     			<div class="door_date">2013.01.20</div>
-	     			<div class="list_button" onClick="this.style.backgroundImage='url(/images/list_down.png)'"></div>
+	     			<div class="list_button"></div>
+	     			<div class="list_button2"></div>
 	     		</div>
 	     		<div class="door_underbar">
 	     			<div class="under_scroll_container">
 	     				<div class="under_scroll_left"></div>
 	     				<div class="under_list_container">
-	     					<div class="under_list1_box">
+	     					<div class="under_list_box">
 								<% paper.participants.forEach(function printBr(e, i, array) { %>
 									<div class="under_list">
 										<div class="under_list_image">
@@ -159,20 +187,6 @@
 									</div>
 								<%});%>
 							</div>
-							<!--div class="under_list2_box">
-								<% paper.participants.forEach(function printBr(e, i, array) { %>
-									<div class="under_list">
-										<div class="under_list_image">
-											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
-												<img alt="<%-e.name%>" src="<%-e.picture%>" style="width:auto;height:100%">
-											</a>
-										</div>
-										<div class="under_list_name">
-											<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank> <%-e.name%> </a>
-										</div>
-									</div>									
-								<%});%>
-							</div-->			
 						</div>
 						<div class="under_scroll_right"></div>
 					</div>
@@ -182,8 +196,10 @@
 	    
 		<!--contents 컨테이너-->
 		<div class="Container">
-			<div class="paper_outer" style="background-image:url('/background/<%-paper.background%>')">	
-				<div class="icon_door" onClick="this.style.backgroundImage='url(/images/pop-up2.png)'"></div>
+			<!--div class="default"></div-->
+			<div class="paper_outer" style="background-image:url('/background/<%-paper.background%>'); background-size:<%-8%>%;">	
+				<div class="icon_door"></div>
+				<div class="icon_door2"></div>
 				<%if(paper.contents.image){
 					paper.contents.image.forEach(function(e,i){
 					var styleString = bulidContentStyleString(e,paper);					
@@ -201,7 +217,7 @@
 					var styleString = bulidContentStyleString(e,paper);
 					%>
 					<div class ="sound_content" style ="<%=styleString%>">
-						<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+						<img style="width:100%;height:100%;" src="images/speaker.png"/>
 						<audio controls="controls" style="display:none">
 							<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
 							Your browser does not support the audio element.

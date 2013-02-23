@@ -23,8 +23,10 @@
 		<link rel="shortcut icon" href="/icons/logo3.ico">
 		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
 		<script>
+			var server_ip = "210.122.0.119:8001";
 			function checkFBAuthResponse(response) { 
 				if( response.authResponse.userID == "<%-paper.receiver_fb_id%>"){
 				   	//alert("dfasd");
@@ -62,7 +64,25 @@
 					ratio : height/width
 				};
 			}
-			
+			function toDegree(radian){	
+				return radian / (Math.PI * 2 ) * 360;
+			}
+			function bulidContentStyleString(c,p){
+				c.x -= c.width*0.5;
+				c.y -= c.height*0.5;
+				return "width:" + c.width/p.width * 100 + "%;height:"+c.height/p.height * 100+"%;" +
+		    		   "left:"  + c.x/p.width * 100 + "%;top:"+c.y/p.height * 100+"%;" +
+		    		   "-webkit-transform:rotate("+toDegree(c.rotation)+"deg);" + 
+		    		   "display:none;";
+			}
+			function showImageContent(e){
+				var styleString = bulidContentStyleString(e,rollingpaper);	
+	        			$(".paper_outer").append("<div class ='image_content' style='"+styleString+"'>"+ 
+								"<img src='" + e.image.replace('localhost',server_ip) + "'/>" + 
+							"</div>" );
+				
+				$(".image_content").clearQueue().fadeIn();
+			}
 			function autoResizeContentsContainer(){
 				// 1024/768
 				var leftBarWidth = 150;
@@ -104,6 +124,29 @@
 			}
 			
 			
+			var socket = null;
+	        function connectWS() {
+	            console.log('Connecting to local server...');
+	            if (socket == null) {
+	                socket = io.connect(null,{'auto connect': false});
+	           	socket.on('message', function (data){
+	       					
+	       			});
+	        		socket.on('disconnect',function(){
+	        				
+	        		});
+	        		socket.on("newImageContent",function(data){
+		        		console.log(data);
+	        			showImageContent(data.image);
+	        		});
+	        		socket.on("deleteImageContent",function(data){
+	        			deleteImageContent(data.idx);
+	        		});
+	        	}
+	        	socket.socket.connect();
+	        }
+			
+			
 			$(document).ready(function(){
 				initFacebook();
 				$(".sound_content").click(function(){
@@ -124,18 +167,18 @@
 				
 				
 				$(".under_scroll_left").click(function(){
-					$(".under_list_box").animate({"left": "-=465px"});
+					$(".under_list_box").animate({"left": "+=465px"});
 					return false;
 				});
 				$(".under_scroll_right").click(function(){
-					$(".under_list_box").animate({"left": "+=465px"});
+					$(".under_list_box").animate({"left": "-=465px"});
 					return false;
 				});
 				
 				$($(".page_indicator")[0]).addClass("selected");
 				
 				$(".icon_door").click(function(){
-					$(".title_container").clearQueue().fadeIn().css({"background-color":"transparent"});
+					$(".title_container").clearQueue().fadeIn();
 					$(".icon_door2").fadeIn();
 					
 				});
@@ -144,6 +187,9 @@
 					$(".icon_door").fadeIn();	
 					$(".title_container").clearQueue().fadeOut();	
 				});
+				
+				
+				connectWS();
 			});
 			
 			
@@ -153,6 +199,7 @@
 	</head>
 	<body onresize="autoResizeContentsContainer();">
 		<div class="Container" >
+			<!--div class="default"></div-->
 			<!-- background 사이즈를 계산하는 부분을 다시 넣어야한다. 지금은 걍 10퍼센트로 고정-->
 			<div class="paper_outer" 
 				 style="background-image:url('/background/<%-paper.background%>'); background-size:<%-8%>%">	
@@ -175,7 +222,7 @@
 					var styleString = bulidContentStyleString(e,paper);
 					%>
 					<div class ="sound_content" style ="<%=styleString%>">
-						<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+						<img style="width:100%;height:100%;" src="images/speaker.png"/>
 						<audio controls="controls" style="display:none">
 							<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
 							Your browser does not support the audio element.
@@ -191,15 +238,10 @@
 			<div class="clear_icon"></div>
 				<div class="Web_front_title">"<%-paper.title%>"</div>
 				<div class="Web_front_date">2013.08.15</div>
-		
 				<div class="under_scroll_container">
 					<div class="under_scroll_left"></div>
-		
 					<div class="under_list_container">
-						
-						
 						<div class="under_list_box">
-							
 							<% paper.participants.forEach(function printBr(e, i, array) { %>
 								<div class="under_list">
 									<div class="under_list_image">
@@ -212,21 +254,10 @@
 									</div>
 								</div>
 							<%});%>
-							
 						</div>
-						
 					</div>
-					
 					<div class="under_scroll_right"></div>
 				</div>
-		
-				<!--앞페이지 로딩-->
-				<!--<div class="Front_loading">
-					<%var participantsPerPage = 4;
-						for(var i=0;i<paper.participants_count/participantsPerPage;i++){%>
-						<div class="page_indicator"></div>	
-					<%}%>
-				</div>-->
 			</div>
 		</div>
 	</body>

@@ -1,0 +1,273 @@
+<%
+	function toDegree(radian){	
+		return radian / (Math.PI * 2 ) * 360;
+	}
+	function toFormatedDate(date){
+		return date.getFullYear() + "-" + date.getMonth() +"-" + date.getDate(); 
+	}
+	function bulidContentStyleString(c,p){
+		c.x -= c.width*0.5;
+		c.y -= c.height*0.5;
+		return "width:" + c.width/p.width * 100 + "%;height:"+c.height/p.height * 100+"%;" +
+			   "left:"  + c.x/p.width * 100 + "%;top:"+c.y/p.height * 100+"%;" +
+			   "-webkit-transform:rotate("+toDegree(c.rotation)+"deg);";
+	}
+%>
+
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/css/paper.css">
+		<link rel="shortcut icon" href="/icons/logo3.ico">
+		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/jquery-cookie/jquery.cookie.js"></script>
+		<script>
+			function initFacebook(callback){
+				FB.init({ 
+					appId: '333864290041286', 
+					status: false, 
+					cookie: true, 
+					xfbml: true ,
+					oauth:true
+				});
+				
+				FB.getLoginStatus(function(response) {
+					if (response.authResponse && response.authResponse.userID) {
+						callback(response);
+					}
+					else {
+						FB.login(function(response){
+							if (response.authResponse) {
+						    	callback(response);
+						    } else {
+						    
+						    }
+						});
+					}
+				});
+			}		
+			
+			var server_ip = "210.122.0.119:8001";//<%-JSON.stringify(server_ip)%>
+			var rollingpaper = <%-JSON.stringify(paper)%>
+			
+			
+			function toDegree(radian){	
+				return radian / (Math.PI * 2 ) * 360;
+			}
+			function bulidContentStyleString(c,p){
+				c.x -= c.width*0.5;
+				c.y -= c.height*0.5;
+				return "width:" + c.width/p.width * 100 + "%;height:"+c.height/p.height * 100+"%;" +
+		    		   "left:"  + c.x/p.width * 100 + "%;top:"+c.y/p.height * 100+"%;" +
+					   "-webkit-transform:rotate("+toDegree(c.rotation)+"deg);";
+			}
+			function showImageContent(e){
+				var styleString = bulidContentStyleString(e,rollingpaper);	
+	        			$(".paper_outer").append("<div class ='image_content' style='"+styleString+"'>"+ 
+							"<img src='" + e.image.replace('localhost',server_ip) + "'/>" + 
+						"</div>" );
+			}
+			function deleteImageContent(idx){
+				$(".image_content[idx='" + idx + "']").remove();
+			}
+			
+			var socket = null;
+	        function connectWS(facebook_id) {
+	            console.log('Connecting to local server...');
+	            if (socket == null) {
+	                socket = io.connect(null,{'auto connect': false});
+	               	socket.on('connect', function () {
+	               		socket.emit("enterRoom",{
+	               			room : 97
+	               		});	
+	               	});
+	        		socket.on('message', function (data){
+	       					
+	       			});
+	        		socket.on('disconnect',function(){
+	        				
+	        		});
+	        		socket.on("chat",function(data){
+	        			$(".chating_list").append("<p>"+data.message+"</p>");
+	        		});
+	        		socket.on("userList",function(data){
+	        			$(".current_participants p").fadeOut(function(){
+	        				this.remove();
+	        			});
+	        			$.each(data.users,function(i,v){
+	        				$(".current_participants").append("<p>"+ JSON.stringify(v) + "</p>");
+	        			});
+	        		});
+	        		socket.on("newImageContent",function(data){
+	        			showImageContent(data.image);
+	        		});
+	        		socket.on("deleteImageContent",function(data){
+	        			deleteImageContent(data.idx);
+	        		});
+	        	}
+	        	socket.socket.connect();
+	        }
+			
+			function buildSize(width,height){
+				return{
+					width : width,
+					height : height,
+					ratio : height/width
+				};
+			}
+			
+			function autoResizeContentsContainer(){
+				// 1024/768
+				var leftBarWidth = 150;
+			
+				var originalSize = {
+					width  : <%-paper.width%> + leftBarWidth,
+					height : <%-paper.height%>
+				};
+				var paperRatio = originalSize.height / originalSize.width; 
+				
+				var $container = $(".paper_outer");
+				var $parent = $(".Container");// $container.parent();
+				
+				var currentSize = buildSize($parent.width(),$parent.height());
+				
+				//
+				if(paperRatio < currentSize.ratio){
+					$container.width(currentSize.width);
+					$container.height(currentSize.width*paperRatio);
+					$container.css({
+						"left": 0,
+						"top" : (currentSize.height - $container.height()) / 2
+					});
+				}
+				else{
+					$container.height(currentSize.height);
+					$container.width(currentSize.height/paperRatio);
+					$container.css({
+						"left" : (currentSize.width - $container.width()) / 2,
+						"top"  : 0
+					});
+				}
+				
+				$front = $(".Web_front");
+				$front.css({
+					left : (currentSize.width - $front.width())/2,
+					top  : (currentSize.height - $front.height())/2
+				});
+			}
+			
+			
+		
+			
+			$(document).ready(function(){
+				initFacebook(function(response){
+					console.log(response);
+					var facebook_id = response.authResponse.userID;
+					connectWS(facebook_id);
+				});
+				
+				$(".sound_content").click(function(){
+					var audio = $( $(this).find("audio")[0] );
+					console.log(audio);
+					audio[0].play();
+				});
+				autoResizeContentsContainer();
+				$(".clear_icon").click(function(){
+					$(".icon_door2").hide();
+					$(".title_container").clearQueue().fadeOut();
+				});
+				setTimeout(function(){
+					$(".title_container").trigger("click");
+				},1000000);
+			});
+			
+			function sendChating(){
+				socket.emit("chat",{ message : $("#chating_input").val() });
+				$("#chating_input").val("");
+			}
+			
+		</script>
+		
+		<title>Rolling Paper</title>
+	</head>
+	<body onresize="autoResizeContentsContainer();">
+		<div class="left_bar">
+			<div class="current_participants">
+				
+			</div>	
+			<div class="chating_container">
+				<div class="chating_list"></div>
+				<input id="chating_input" type="text" value=""/>
+				<button class="chating_send_button" onclick="sendChating();">전송</button>
+			</div>
+		</div>
+		
+		<div class="Container" >
+			<!-- background 사이즈를 계산하는 부분을 다시 넣어야한다. 지금은 걍 10퍼센트로 고정-->
+			<div class="paper_outer" 
+				 style="background-image:url('/background/<%-paper.background%>'); background-size:<%-8%>%">	
+				<div class="icon_door"></div>
+				<div class="icon_door2"></div>
+				<%if(paper.contents.image){
+					paper.contents.image.forEach(function(e,i){	
+					%>
+						<div class ="image_content" style="<%-bulidContentStyleString(e,paper)%>">
+							<img src="<%-e.image.replace('localhost',server_ip)%>"/>
+						</div>
+					<%});
+				}%>
+				<%if(paper.contents.sound){
+					paper.contents.sound.forEach(function(e,i) {
+					e.height = 50;
+					e.width  = 50;
+					e.rotation = 0;%>
+					<div class ="sound_content" style ="<%-bulidContentStyleString(e,paper)%>">
+						<img style="width:100%;height:100%;" src="images/speaker2.png"/>
+						<audio controls="controls" style="display:none">
+							<source src="<%-e.sound.replace('localhost',server_ip)%>" type="audio/wav">
+							Your browser does not support the audio element.
+						</audio>
+					</div>
+					<%});
+				}%>
+			</div>
+		</div>
+		<!--div class="title_container">
+			<div class="Web_front">
+				<div class="clear_icon"></div>
+				<div class="Web_front_title">
+					"<%-paper.title%>"
+				</div>
+				<div class="Web_front_date">
+					2013.08.15
+				</div>
+				<div class="under_scroll_container">
+					<div class="under_scroll_left"></div>
+					<div class="under_list_container">
+						<div class="under_list_box">
+							<% paper.participants.forEach(function printBr(e, i, array) { %>
+							<div class="under_list">
+								<div class="under_list_image">
+									<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank> 
+										<img alt="name2" src="<%-e.picture%>" style="width:100%;height:100%"/>
+									</a>
+								</div>
+								<div class="under_list_name">
+									<a href="https://www.facebook.com/<%-e.facebook_id%>" target=_blank>
+										<%-e.name%>
+									</a>
+								</div>
+							</div>
+							<%});%>
+						</div>
+					</div>
+					<div class="under_scroll_right"></div>
+				</div>
+			</div>
+		</div-->
+	</body>
+</html>

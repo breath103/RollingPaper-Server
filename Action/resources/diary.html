@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<title>게임</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		
+		<link href="/css/main.css" rel="stylesheet" type="text/css" />
+		
+		<script src="/js/async.js"></script>
+		<script src="/js/step.js"></script>
+		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+		<script src="/diaryJS/facebook_contents_loader.js"></script>
+		<script>
+
+			Array.prototype.addArray = function(array){
+				for(var i=0;i<array.length;i++){
+					this.push(array[i]);	
+				}
+			}
+		
+			
+			function initLocalStorage(){
+				if(typeof(Storage)!=="undefined")
+				{
+					
+				}
+				else
+				{
+					alert("브라우져가 웹스토리지를 지원하지 않습니다");
+				}
+			}
+			function isStorageEnabled(){
+				return typeof(Storage)!=="undefined";
+			}
+		
+			function initFacebook(callback)
+			{
+				FB.init({ appId: '333864290041286', status: false, cookie: true, xfbml: true ,oauth:true});
+				FB.getLoginStatus(function(response) {
+					console.log(response);
+					if (response.authResponse && response.authResponse.userID) {
+						callback();
+					}
+					else {
+						FB.login(function(response){
+							if (response.authResponse) {
+						    	checkFBAuthResponse(response);
+						    } else {
+						    
+						    }
+						});
+					}
+				});
+			}	
+			
+			function showDateIn(date){
+				$("#showDayButton").html( (date.getMonth() + 1) +"/" + date.getDate());
+				$(".date-container").clearQueue().hide();
+				for(var i = 2000;i<date.getFullYear();i++){
+					$(".date-container[date='"+i+"/"+(date.getMonth() + 1) +"/" + date.getDate() + "']").clearQueue().fadeIn();
+				}
+			}
+			
+			var currentShowingDate = new Date();
+			function showPreviousDayContent(){
+				currentShowingDate.setDate(currentShowingDate.getDate() - 1);
+				showDateIn(currentShowingDate);
+			}
+			function showTodayContent(){
+				currentShowingDate = new Date();
+				showDateIn(currentShowingDate);
+			}
+			function showNextDayContent(){
+				currentShowingDate.setDate(currentShowingDate.getDate() + 1);
+				showDateIn(currentShowingDate);
+			}
+			
+			var calendarMap = {};
+			$(document).ready(function(){
+				initFacebook(function(){
+					
+					var facebookContentsLoader = new FacebookContentsLoader(); 
+					Step(
+						function loadStuff() {
+							facebookContentsLoader.getAllStatuses(this.parallel());
+  							facebookContentsLoader.getAllPhotos(this.parallel());
+  							facebookContentsLoader.getAllLinks(this.parallel());
+  						},
+  						function showStuff(error,statuses,photos,links) {
+  							if(error){
+  								console.err(error);
+  							}
+  							else{
+  								var contents = [];
+  								contents.addArray(statuses);
+  								contents.addArray(photos);
+  								contents.addArray(links);
+  								
+  								contents.sort(function(a,b){	
+  									return b.getCreatedTime().getTime() - a.getCreatedTime().getTime();
+  								});
+  								
+  								function dateToKey(x){
+  									return x.getFullYear() + "/" + (x.getMonth() + 1) + "/" + x.getDate();
+  								}
+  								contents.forEach(function(v,i){
+  									var time = dateToKey(v.getCreatedTime());
+  									if(!calendarMap[time])
+  										calendarMap[time] = [];
+  									calendarMap[time].push(v);
+  								});
+  								
+  								for(var i in calendarMap){
+  									var title = i;
+  									
+  									$(".site-container").append("<div class='date-container' date = '"+title+"'><p class='title'>"+title+"</p></div>");
+  									
+  									var contents = calendarMap[i];
+  									contents.forEach(function(v,i){
+	  									if( v instanceof Photo ){
+	  										$(".date-container[date='"+title+"']").append(
+	  											"<div class='Photo'>"+
+													"<a href = '" + v.src_big +"'>" + 
+														"<img src='"+v.src+"' />"+
+													"</a>" +
+													"<p class='caption'>"+(v.caption?v.caption:"")+"</p>" +
+												"</div>"
+											);
+	  									}
+	  									else if(v instanceof Status){
+	  										$(".date-container[date='"+title+"']").append(
+	  											"<div class='Status'>"+
+	  												v.message +
+	  											"</div>"
+											);
+	  									}
+	  									else if(v instanceof Link){
+	  										$(".date-container[date='"+title+"']").append(
+	  											"<div class='Link'>"+
+	  												"<p>"+v.title+"</p>" +
+	  												"<p>"+v.summary+"</p>" +
+	  												"<p>"+v.owner_comment+"</p>" +
+	  												"<p>"+v.url+"</p>" +
+	  												(v.image_urls?("<a href = '" + v.url +"'>" + 
+														"<img src='"+v.image_urls[0]+"'/>"+
+													"</a>"):("")) +
+	  											"</div>"
+											);
+	  									}
+	  								});
+	  							}
+	  						}
+	  						
+	  						
+	  						$(".Loading").fadeOut();
+  						}
+					);	
+				});
+			});
+	   	</script> 
+	   	<style>
+			html,body{
+				width:100%;
+				height:100%;
+				overflow:hidden;
+			}
+			*{
+				font-size: 1em;
+				letter-spacing: -1px;
+				font-family: NanumGothic,"Apple SD Gothic Neo","Malgun Gothic",AppleGothic,Dotum,sans-serif;
+				margin: 0px;
+				padding: 0px;
+			}
+			.site-container{
+				width:100%;
+				height:100%;
+				overflow:scroll;
+			}
+			.date-container{
+				border-radius:10px;
+				background-color: rgb(142, 194, 190);
+				width:500px;
+				height:auto;
+				margin-bottom:10px;
+			}
+			.date-container .title{
+				text-align: center;
+				font-family: "맑은 고딕";
+				font-size: 40px;
+			}
+			.Photo{
+				width:100%;
+				height: auto;
+				background-color: rgba(0, 0, 0, 0.28);
+				margin-bottom:8px;
+				border-radius:5px;
+			}
+			.Photo img{
+			}
+			.Photo .caption{
+			}
+			.Status{
+				width:100%;
+				height: auto;
+				background-color: rgba(0, 0, 0, 0.28);
+				margin-bottom:8px;
+				border-radius:5px;
+			}
+			.Link{
+				width:100%;
+				height: auto;
+				background-color: rgba(0, 0, 0, 0.28);
+				margin-bottom:8px;
+				border-radius:5px;
+			}
+			.Loading{
+				width:100%;
+				height:100%;
+				position:absolute;
+				left:0px;
+				top:0px;
+				background-color:black;
+				color:white;
+			}
+		</style>
+	</head>
+	<body>
+		<button onclick="showPreviousDayContent();"><<</button><button id="showDayButton" onclick="showTodayContent();">오늘꺼 보기</button><button onclick="showNextDayContent();">>></button>
+		<div class="site-container">
+			
+		</div>
+		<div class="Loading">Loading..</div>
+	</body>
+</html>
