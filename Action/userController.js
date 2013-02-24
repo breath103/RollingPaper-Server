@@ -9,7 +9,6 @@ var Model = require("./model.js");
 var port = 8001;
 var server_ip = "210.122.0.119" + ":" + port;
 var facebook   = require('facebook-graph');
-
 var userController = function(app) {
 		// 페이스북 아이디를 가지고 회원가입할때의 플로우
 		app.post("/user/joinWithFacebook.json",function(req,res){
@@ -55,7 +54,57 @@ var userController = function(app) {
 				}
 			);
 		});
+		
+		app.post("/user/join.json",function(req,res){
+			var params = req.body;
+			Step(function(){
+				User.userWithEmail(params.email,this);
+			},function(user) {
+				if(user){
+					res.json({ result : "fail" , 
+							   reason : "already registered email"});     
+				}
+				else{
+					user = new User({
+						name     	: params.name ,
+						email    	: params.email,
+						picture  	: params.picture,
+						birthday 	: params.birthday,
+						password 	: params.password,
+						phone 	 	: params.phone
+					});
+					User.insert(user,function(createdUser){
+						if(createdUser)
+							res.json({result : "join" ,user : createdUser}); 
+						else
+							res.json({result : "fail" ,reason : "user insert fail"}); 
+					});
+				}
+			});
+		});
 	
+	
+	
+		app.post("/user/signin.json",function(req,res){
+			var params = req.body;
+			console.log(params);
+			Step(function(){
+				User.userWithEmail(params.email,this);
+			},function(user) {
+				if(user){
+					if(user.password == params.password)
+						res.json({ result : "signin", 
+								   user   :  user});     
+					else
+						res.json({ result : "fail" , 
+								   reason : "wrong password"});     
+				}
+				else{
+					res.json({ result : "fail" , 
+							   reason : "wrong email"});     
+				}
+			});
+		});
 	
 		/**
 		 * 3rd party mapping for load user for idx 
@@ -139,10 +188,7 @@ var userController = function(app) {
 		});
 		
 		/*
-		 *
 		 * 그냥 참여중인 종이를 가져올때 보내진것과 아직 작성중인것들을 모두 한꺼번에 조회할까, 아니면 나눠서 할까 고민중이라 일단 미구현
-		 * 
-		 *  
 		 */
 		app.get("/user/:id([0-9]+)/getSendedPapers.json",function(req,res){
 			

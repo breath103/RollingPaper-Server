@@ -9,7 +9,7 @@ function DBTemplate(fConnected) {
 	
 	var outerThis = this;
 	this.client = mysql.createConnection({
-		host : "127.0.0.1",
+		host : "210.122.0.119",
 		user : "root",
 		password : "1234",
 		timezone : "local",
