@@ -152,7 +152,16 @@ User.prototype = {
 										});
 	},
 	getSendedPapers : function(success,failure){
-		
+		DBTemplate.getSingleton().query("call getUserSendedPapers(?)",
+										[this.idx],
+										function(error,results) {
+											if(error){
+												failure(error);
+											} 
+											else {
+												success(results[0]);
+											}
+										});
 	},
 	quitPaper : function(paper_idx,success,failure){
 		DBTemplate.getSingleton().query("call QuitRoom(?,?)",
@@ -217,6 +226,9 @@ Paper.findAll = function(success,failure){
 					});
 		
 };
+Paper.findWithEmail = function(success,failure){
+	
+}
 Paper.getCompletePaperWithID = function(id,success,failure){
 	DBTemplate.getSingleton().query("call getPaperForWebView(?)", 
 		[id], 

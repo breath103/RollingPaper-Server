@@ -176,12 +176,21 @@ var userController = function(app) {
 			});	
 		});
 		
+		
+		app.get("/user/:id([0-9]+)/participating_papers.json",function(req,res){
+			req.user.getParticipatingPapers(function(papers){
+				res.json({papers : papers});
+			},function(error){
+				res.json({error : error.toString()});
+			});	
+		});
+		
 		/*
 		 *  GET receivedpapers with user_idx
 		 */
-		app.get("/user/:id([0-9]+)/getReceivedPapers.json",function(req,res){
+		app.get("/user/:id([0-9]+)/received_papers.json",function(req,res){
 			req.user.getReceivedPapers(function(papers){
-				res.json(papers);
+				res.json({papers : papers});
 			},function(error){
 				res.json({error : error.toString()});
 			});
@@ -190,8 +199,12 @@ var userController = function(app) {
 		/*
 		 * 그냥 참여중인 종이를 가져올때 보내진것과 아직 작성중인것들을 모두 한꺼번에 조회할까, 아니면 나눠서 할까 고민중이라 일단 미구현
 		 */
-		app.get("/user/:id([0-9]+)/getSendedPapers.json",function(req,res){
-			
+		app.get("/user/:id([0-9]+)/sended_papers.json",function(req,res){
+			req.user.getSendedPapers(function(papers){
+				res.json({papers : papers});
+			},function(error){
+				res.json({error : error.toString()});
+			});
 		});
 		
 		/*
