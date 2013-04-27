@@ -4,9 +4,7 @@
 		<title>게임</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-		
 		<link href="/css/main.css" rel="stylesheet" type="text/css" />
-		
 		<script src="/js/async.js"></script>
 		<script src="/js/step.js"></script>
 		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
@@ -20,20 +18,25 @@
 					this.push(array[i]);	
 				}
 			}
-		
 			
 			function initLocalStorage(){
-				if(typeof(Storage)!=="undefined")
-				{
-					
-				}
-				else
-				{
-					alert("브라우져가 웹스토리지를 지원하지 않습니다");
-				}
+				if(typeof(Storage)!=="undefined"){}
+				else{alert("브라우져가 웹스토리지를 지원하지 않습니다");}
 			}
-			function isStorageEnabled(){
-				return typeof(Storage)!=="undefined";
+			function isStorageEnabled(){ return typeof(Storage)!=="undefined";}
+			
+			
+			
+			function searchPost(keyword) {
+				$.each($(".date-container"),function(i,v) {
+					var content = $(v).html();
+					if(content.indexOf(keyword) != -1){
+						console.log(content);
+						$(v).clearQueue().slideDown();
+					} else {
+						$(v).clearQueue().slideUp();
+					}
+				});
 			}
 		
 			function initFacebook(callback)
@@ -80,14 +83,18 @@
 			
 			var calendarMap = {};
 			$(document).ready(function(){
+				$("#search_input").change(function(){
+					searchPost($(this).val());
+				});
+			
 				initFacebook(function(){
 					
 					var facebookContentsLoader = new FacebookContentsLoader(); 
 					Step(
 						function loadStuff() {
 							facebookContentsLoader.getAllStatuses(this.parallel());
-  							facebookContentsLoader.getAllPhotos(this.parallel());
-  							facebookContentsLoader.getAllLinks(this.parallel());
+  							facebookContentsLoader.getAllPhotos(  this.parallel());
+  							facebookContentsLoader.getAllLinks(   this.parallel());
   						},
   						function showStuff(error,statuses,photos,links) {
   							if(error){
@@ -228,7 +235,9 @@
 		</style>
 	</head>
 	<body>
-		<button onclick="showPreviousDayContent();"><<</button><button id="showDayButton" onclick="showTodayContent();">오늘꺼 보기</button><button onclick="showNextDayContent();">>></button>
+		<button onclick="showPreviousDayContent();"></button>
+		<button id="showDayButton" onclick="showTodayContent();">오늘꺼 보기</button><button onclick="showNextDayContent();">>></button>
+		<input type="text" id="search_input"/>
 		<div class="site-container">
 			
 		</div>
