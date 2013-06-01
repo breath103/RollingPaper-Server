@@ -238,6 +238,7 @@ var paperController = function(app,io) {
 	 * new version of get backgroundList
 	 */
 	app.get("/paper_backgroundList.json", function(req, res) {
+		console.log("paper-background");
 		fs.readdir("resources/background", function(error, files) {
 			if (error)
 				res.json({error : error.toString()});
