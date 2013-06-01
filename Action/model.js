@@ -134,7 +134,7 @@ User.prototype = {
 												failure(error);
 											} 
 											else {
-												console.log(results);
+												console.log("++++" , results);
 												success(results[0]);
 											}
 										});
@@ -147,6 +147,8 @@ User.prototype = {
 												failure(error);
 											} 
 											else {
+												var stack = new Error().stack;
+												console.log( stack );
 												success(results[0]);
 											}
 										});

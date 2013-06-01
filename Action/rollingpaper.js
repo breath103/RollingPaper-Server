@@ -210,15 +210,13 @@ var app = express();
 
 	app.post("/ondeleteapp",function(req,res){
 		console.log("DEAUTH!!!!!");
-	//	console.log(req);
 		console.log(req.params);
 		res.render("text.ejs", {
 			text : {a:"!!!!"}
 		});
 
 	});
-	AppRoutes();	
-//	console.log(app.routes);
+	AppRoutes();
 	userController(app);
 	noticeController(app);
 
@@ -235,6 +233,7 @@ var server = http.createServer(app).listen(port);
 	initWebSocket(server);
 
 	paperController(app,io);
+
 
 
 
